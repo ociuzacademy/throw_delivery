@@ -1,4 +1,4 @@
-package com.throw.delivery
+package com.throwapp.delivery
 
 import io.flutter.embedding.android.FlutterActivity
 
