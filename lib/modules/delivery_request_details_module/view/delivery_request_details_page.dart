@@ -13,7 +13,7 @@ import 'package:throw_delivery/modules/place_bid_module/view/place_bid_page.dart
 class DeliveryRequestDetailsPage extends StatelessWidget {
   const DeliveryRequestDetailsPage({super.key});
 
-  static route() =>
+  static MaterialPageRoute route() =>
       MaterialPageRoute(builder: (_) => DeliveryRequestDetailsPage());
 
   @override

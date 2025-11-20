@@ -21,7 +21,7 @@ class PlaceBidPage extends StatefulWidget {
   @override
   State<PlaceBidPage> createState() => _PlaceBidPageState();
 
-  static route({required double baseBidAmount, double? currentMinBid}) =>
+  static MaterialPageRoute route({required double baseBidAmount, double? currentMinBid}) =>
       MaterialPageRoute(
         builder: (_) => PlaceBidPage(
           baseBidAmount: baseBidAmount,

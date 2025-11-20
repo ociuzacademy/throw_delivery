@@ -1,6 +1,8 @@
+// vehicle_section.dart (updated)
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:throw_delivery/modules/register_module/providers/register_provider.dart';
 import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
 import 'package:throw_delivery/modules/register_module/widgets/custom_text_field_with_label.dart';
 
@@ -14,6 +16,7 @@ class VehicleSection extends StatelessWidget {
   final FocusNode vehicleModelFocusNode;
   final FocusNode licensePlateFocusNode;
   final VoidCallback register;
+
   const VehicleSection({
     super.key,
     required this.isDark,
@@ -29,6 +32,8 @@ class VehicleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RegisterProvider>(context);
+
     return Column(
       children: [
         CustomTextFieldWithLabel(
@@ -40,7 +45,7 @@ class VehicleSection extends StatelessWidget {
           screenWidth: screenWidth,
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) => vehicleModelFocusNode.requestFocus(),
-          validator: RegisterHelper.validateVehicleType,
+          validator: provider.validateVehicleType,
         ),
         SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
@@ -52,7 +57,7 @@ class VehicleSection extends StatelessWidget {
           screenWidth: screenWidth,
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (_) => licensePlateFocusNode.requestFocus(),
-          validator: RegisterHelper.validateVehicleModel,
+          validator: provider.validateVehicleModel,
         ),
         SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
@@ -64,7 +69,7 @@ class VehicleSection extends StatelessWidget {
           screenWidth: screenWidth,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (_) => register(),
-          validator: RegisterHelper.validateLicensePlate,
+          validator: provider.validateLicensePlate,
         ),
       ],
     );

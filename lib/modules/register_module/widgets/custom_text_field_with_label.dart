@@ -1,8 +1,8 @@
+// custom_text_field_with_label.dart (updated)
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/typedefs/validate_text_form_input.dart';
-
 import 'package:throw_delivery/core/widgets/text_field/custom_text_field.dart';
 import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
 
@@ -18,7 +18,8 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final Widget? suffixIcon;
   final bool isObscure;
-  final ValidateTextFormInput validator; // Add validator
+  final ValidateTextFormInput validator;
+
   const CustomTextFieldWithLabel({
     super.key,
     required this.controller,
@@ -32,7 +33,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.onFieldSubmitted,
     this.suffixIcon,
     this.isObscure = false,
-    this.validator, // Add validator parameter
+    this.validator,
   });
 
   @override
@@ -59,7 +60,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           suffixIcon: suffixIcon,
           obscureText: isObscure,
-          validator: validator, // Pass validator to CustomTextField
+          validator: validator,
         ),
       ],
     );

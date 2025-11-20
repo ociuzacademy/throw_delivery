@@ -1,10 +1,12 @@
+// text_field_section.dart (updated)
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:throw_delivery/modules/register_module/providers/register_provider.dart';
 import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
 import 'package:throw_delivery/modules/register_module/widgets/custom_text_field_with_label.dart';
 
-class TextFieldSection extends StatefulWidget {
+class TextFieldSection extends StatelessWidget {
   final bool isDark;
   final double screenWidth;
   final TextEditingController nameController;
@@ -16,6 +18,7 @@ class TextFieldSection extends StatefulWidget {
   final FocusNode phoneFocusNode;
   final FocusNode passwordFocusNode;
   final FocusNode vehicleTypeFocusNode;
+
   const TextFieldSection({
     super.key,
     required this.isDark,
@@ -32,82 +35,71 @@ class TextFieldSection extends StatefulWidget {
   });
 
   @override
-  State<TextFieldSection> createState() => _TextFieldSectionState();
-}
-
-class _TextFieldSectionState extends State<TextFieldSection> {
-  final ValueNotifier<bool> _isPasswordVisible = ValueNotifier(false);
-
-  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<RegisterProvider>(context);
+
     return Column(
       children: [
         CustomTextFieldWithLabel(
-          controller: widget.nameController,
-          focusNode: widget.nameFocusNode,
+          controller: nameController,
+          focusNode: nameFocusNode,
           label: 'Name',
           hintText: 'Enter your full name',
-          isDark: widget.isDark,
-          screenWidth: widget.screenWidth,
+          isDark: isDark,
+          screenWidth: screenWidth,
           textInputAction: TextInputAction.next,
-          onFieldSubmitted: (_) => widget.emailFocusNode.requestFocus(),
-          validator: RegisterHelper.validateName,
+          onFieldSubmitted: (_) => emailFocusNode.requestFocus(),
+          validator: provider.validateName,
         ),
-        SizedBox(height: RegisterHelper.getFieldSpacing(widget.screenWidth)),
+        SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
-          controller: widget.emailController,
-          focusNode: widget.emailFocusNode,
+          controller: emailController,
+          focusNode: emailFocusNode,
           label: 'Email',
           hintText: 'ethan.carter@example.com',
-          isDark: widget.isDark,
-          screenWidth: widget.screenWidth,
+          isDark: isDark,
+          screenWidth: screenWidth,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
-          onFieldSubmitted: (_) => widget.phoneFocusNode.requestFocus(),
-          validator: RegisterHelper.validateEmail,
+          onFieldSubmitted: (_) => phoneFocusNode.requestFocus(),
+          validator: provider.validateEmail,
         ),
-        SizedBox(height: RegisterHelper.getFieldSpacing(widget.screenWidth)),
+        SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
-          controller: widget.phoneController,
-          focusNode: widget.phoneFocusNode,
+          controller: phoneController,
+          focusNode: phoneFocusNode,
           label: 'Phone Number',
           hintText: '+1 (555) 123-4567',
-          isDark: widget.isDark,
-          screenWidth: widget.screenWidth,
+          isDark: isDark,
+          screenWidth: screenWidth,
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.next,
-          onFieldSubmitted: (_) => widget.passwordFocusNode.requestFocus(),
-          validator: RegisterHelper.validatePhone,
+          onFieldSubmitted: (_) => passwordFocusNode.requestFocus(),
+          validator: provider.validatePhone,
         ),
-        SizedBox(height: RegisterHelper.getFieldSpacing(widget.screenWidth)),
-        ValueListenableBuilder(
-          valueListenable: _isPasswordVisible,
-          builder: (context, isPasswordVisible, child) {
-            return CustomTextFieldWithLabel(
-              controller: widget.passwordController,
-              focusNode: widget.passwordFocusNode,
-              label: 'Password',
-              hintText: 'Enter password',
-              isDark: widget.isDark,
-              screenWidth: widget.screenWidth,
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.next,
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _isPasswordVisible.value = !isPasswordVisible;
-                },
-                icon: Icon(
-                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: const Color(0xFF9CA3AF),
-                  size: RegisterHelper.getIconSize(widget.screenWidth),
-                ),
-              ),
-              isObscure: isPasswordVisible,
-              onFieldSubmitted: (_) =>
-                  widget.vehicleTypeFocusNode.requestFocus(),
-              validator: RegisterHelper.validatePassword,
-            );
-          },
+        SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
+        CustomTextFieldWithLabel(
+          controller: passwordController,
+          focusNode: passwordFocusNode,
+          label: 'Password',
+          hintText: 'Enter password',
+          isDark: isDark,
+          screenWidth: screenWidth,
+          keyboardType: TextInputType.visiblePassword,
+          textInputAction: TextInputAction.next,
+          suffixIcon: IconButton(
+            onPressed: provider.togglePasswordVisibility,
+            icon: Icon(
+              provider.isPasswordVisible
+                  ? Icons.visibility
+                  : Icons.visibility_off,
+              color: const Color(0xFF9CA3AF),
+              size: RegisterHelper.getIconSize(screenWidth),
+            ),
+          ),
+          isObscure: !provider.isPasswordVisible,
+          onFieldSubmitted: (_) => vehicleTypeFocusNode.requestFocus(),
+          validator: provider.validatePassword,
         ),
       ],
     );

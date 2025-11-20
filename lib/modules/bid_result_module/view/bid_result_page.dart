@@ -18,7 +18,7 @@ class BidResultPage extends StatelessWidget {
     this.dropoffAddress = '456 Oak Ave',
   });
 
-  static route({
+  static MaterialPageRoute route({
     required bool isBidAccepted,
     String? pickupAddress,
     String? dropoffAddress,

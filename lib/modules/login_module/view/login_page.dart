@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 
-  static route() => MaterialPageRoute(builder: (_) => LoginPage());
+  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => LoginPage());
 }
 
 class _LoginPageState extends State<LoginPage> {

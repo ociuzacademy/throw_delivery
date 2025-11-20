@@ -99,7 +99,7 @@ class AuctionInfoCard extends StatelessWidget {
             builder: (context, isExpired, _) {
               return ValueListenableBuilder<int>(
                 valueListenable: totalSeconds,
-                builder: (context, totalSeconds, __) {
+                builder: (context, totalSeconds, _) {
                   return Column(
                     children: [
                       Text(

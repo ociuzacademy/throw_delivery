@@ -23,7 +23,7 @@ class BiddingStatusPage extends StatefulWidget {
   @override
   State<BiddingStatusPage> createState() => _BiddingStatusPageState();
 
-  static route({
+  static MaterialPageRoute route({
     required double bidAmount,
     double? baseBidAmount,
     double? currentMinBid,

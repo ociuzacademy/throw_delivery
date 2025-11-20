@@ -11,7 +11,7 @@ class DocumentUploadPage extends StatefulWidget {
   @override
   State<DocumentUploadPage> createState() => _DocumentUploadPageState();
 
-  static route() => MaterialPageRoute(builder: (_) => DocumentUploadPage());
+  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => DocumentUploadPage());
 }
 
 class _DocumentUploadPageState extends State<DocumentUploadPage> {

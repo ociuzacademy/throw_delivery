@@ -7,7 +7,7 @@ import 'package:throw_delivery/modules/feedbacks_module/widgets/review_tem_widge
 class FeedbacksPage extends StatelessWidget {
   const FeedbacksPage({super.key});
 
-  static route() => MaterialPageRoute(builder: (_) => FeedbacksPage());
+  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => FeedbacksPage());
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ import 'package:throw_delivery/modules/order_details_module/widgets/tracking_car
 class OrderDetailsPage extends StatefulWidget {
   const OrderDetailsPage({super.key});
 
-  static route() => MaterialPageRoute(builder: (_) => const OrderDetailsPage());
+  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => const OrderDetailsPage());
 
   @override
   State<OrderDetailsPage> createState() => _OrderDetailsPageState();
