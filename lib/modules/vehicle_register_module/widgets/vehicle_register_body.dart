@@ -13,10 +13,12 @@ class VehicleRegisterBody extends StatelessWidget {
     super.key,
     required this.formKey,
     required this.provider,
+    required this.onVehicleRegister,
   });
 
   final GlobalKey<FormState> formKey;
   final RegisterProvider provider;
+  final VoidCallback onVehicleRegister;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class VehicleRegisterBody extends StatelessWidget {
                       ProfileSection(
                         isDark: isDark,
                         screenWidth: screenWidth,
-                        imageUrl: provider.profileImage!,
+                        imageUrl: provider.profileImage,
                       ),
                       SizedBox(
                         height: VehicleRegisterHelper.getSectionSpacing(
@@ -71,7 +73,7 @@ class VehicleRegisterBody extends StatelessWidget {
                         vehicleTypeFocusNode: provider.vehicleTypeFocusNode,
                         vehicleModelFocusNode: provider.vehicleModelFocusNode,
                         licensePlateFocusNode: provider.licensePlateFocusNode,
-                        register: () {},
+                        register: onVehicleRegister,
                       ),
 
                       // Add extra space at the bottom for keyboard
@@ -106,7 +108,7 @@ class VehicleRegisterBody extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: onVehicleRegister,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00BFFF),
                     foregroundColor: Colors.white,

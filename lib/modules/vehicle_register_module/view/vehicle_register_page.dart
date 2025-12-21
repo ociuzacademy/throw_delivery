@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:throw_delivery/core/cubit/delivery_agent_profile/delivery_agent_profile_cubit.dart';
 import 'package:throw_delivery/core/widgets/loaders/overlay_loader.dart';
 import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
+import 'package:throw_delivery/modules/document_upload_module/view/document_upload_page.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/bloc/register_vehicle_bloc.dart';
 import 'package:throw_delivery/modules/vehicle_register_module/providers/register_provider.dart';
 import 'package:throw_delivery/modules/vehicle_register_module/utils/vehicle_register_helper.dart';
 import 'package:throw_delivery/modules/vehicle_register_module/widgets/vehicle_register_body.dart';
@@ -55,34 +57,76 @@ class _VehicleRegisterPageState extends State<VehicleRegisterPage> {
         ),
         body: Consumer<RegisterProvider>(
           builder: (context, provider, child) {
-            return BlocListener<
-              DeliveryAgentProfileCubit,
-              DeliveryAgentProfileState
-            >(
-              listener: (context, state) {
-                switch (state) {
-                  case DeliveryAgentProfileLoading():
-                    OverlayLoader.show(
-                      context,
-                      message: 'User profile loading...',
-                    );
-                    break;
-                  case DeliveryAgentProfileSuccess(:final deliveryAgent):
-                    OverlayLoader.hide();
-                    provider.userDetailsInitFromApi(deliveryAgent);
-                    break;
-                  case DeliveryAgentProfileError(:final message):
-                    OverlayLoader.hide();
-                    CustomSnackbar.showError(
-                      context: context,
-                      message: message,
-                    );
-                    break;
-                  default:
-                    break;
-                }
-              },
-              child: VehicleRegisterBody(formKey: _formKey, provider: provider),
+            return MultiBlocListener(
+              listeners: [
+                BlocListener<
+                  DeliveryAgentProfileCubit,
+                  DeliveryAgentProfileState
+                >(
+                  listener: (context, state) {
+                    switch (state) {
+                      case DeliveryAgentProfileLoading():
+                        OverlayLoader.show(
+                          context,
+                          message: 'User profile loading...',
+                        );
+                        break;
+                      case DeliveryAgentProfileSuccess(:final deliveryAgent):
+                        OverlayLoader.hide();
+                        provider.userDetailsInitFromApi(deliveryAgent);
+                        break;
+                      case DeliveryAgentProfileError(:final message):
+                        OverlayLoader.hide();
+                        CustomSnackbar.showError(
+                          context: context,
+                          message: message,
+                        );
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                ),
+                BlocListener<RegisterVehicleBloc, RegisterVehicleState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case RegisterVehicleLoading():
+                        OverlayLoader.show(
+                          context,
+                          message: 'Registering vehicle...',
+                        );
+                        break;
+                      case RegisterVehicleSuccess():
+                        OverlayLoader.hide();
+                        CustomSnackbar.showSuccess(
+                          context: context,
+                          message: 'Vehicle registered successfully!',
+                        );
+                        Navigator.of(context).pushAndRemoveUntil(
+                          DocumentUploadPage.route(),
+                          (route) => false,
+                        );
+                        break;
+                      case RegisterVehicleError(:final message):
+                        OverlayLoader.hide();
+                        CustomSnackbar.showError(
+                          context: context,
+                          message: message,
+                        );
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                ),
+              ],
+              child: VehicleRegisterBody(
+                formKey: _formKey,
+                provider: provider,
+                onVehicleRegister: () {
+                  _vehicleRegisterHelper.registerVehicle(_formKey, provider);
+                },
+              ),
             );
           },
         ),

@@ -36,6 +36,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (context) => DeliveryAgentProfileCubit()),
+        BlocProvider(
+          create: (context) => RegisterVehicleBloc(
+            deliveryAgentRepository: deliveryAgentRepository,
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Throw',

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/providers/register_provider.dart';
 
 class VehicleRegisterHelper {
   final BuildContext context;
@@ -12,6 +14,25 @@ class VehicleRegisterHelper {
     final DeliveryAgentProfileCubit deliveryAgentProfileCubit = context
         .read<DeliveryAgentProfileCubit>();
     deliveryAgentProfileCubit.getDeliveryAgentProfile();
+  }
+
+  void registerVehicle(
+    GlobalKey<FormState> formKey,
+    RegisterProvider provider,
+  ) {
+    FocusScope.of(context).unfocus();
+    if (provider.isFormValid(formKey)) {
+      final RegisterVehicleBloc registerVehicleBloc = context
+          .read<RegisterVehicleBloc>();
+      registerVehicleBloc.add(
+        RegisterVehicleEvent.registerVehicle(provider.vehicleData),
+      );
+    } else {
+      CustomSnackbar.showError(
+        context: context,
+        message: 'Please fill all the fields',
+      );
+    }
   }
 
   // Responsive helper methods

@@ -1,6 +1,7 @@
 // register_provider.dart
 import 'package:flutter/material.dart';
 import 'package:throw_delivery/core/models/delivery_agent_model.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/classes/vehicle_data.dart';
 
 class RegisterProvider extends ChangeNotifier {
   // Form state
@@ -72,6 +73,12 @@ class RegisterProvider extends ChangeNotifier {
   bool isFormValid(GlobalKey<FormState> formKey) {
     return formKey.currentState?.validate() ?? false;
   }
+
+  VehicleData get vehicleData => VehicleData(
+    vehicleType: _vehicleTypeController.text.trim(),
+    vehicleModel: _vehicleModelController.text.trim(),
+    vehicleNumber: _licensePlateController.text.trim(),
+  );
 
   // Clear all data
   void clearAll() {
