@@ -5,7 +5,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/modules/splash_screen_module/utils/splash_screen_helper.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final bool isFirstLaunch;
+  final bool isLoggedIn;
+  final bool isRegistered;
+  final bool isApproved;
+  const SplashScreen({
+    super.key,
+    required this.isFirstLaunch,
+    required this.isLoggedIn,
+    this.isRegistered = false,
+    this.isApproved = false,
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -18,7 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _splashScreenHelper = SplashScreenHelper(context: context);
+    _splashScreenHelper = SplashScreenHelper(
+      context: context,
+      isFirstLaunch: widget.isFirstLaunch,
+      isLoggedIn: widget.isLoggedIn,
+      isRegistered: widget.isRegistered,
+      isApproved: widget.isApproved,
+    );
     // Set up timer to navigate after 3 seconds
     _navigationTimer = Timer(
       const Duration(seconds: 3),

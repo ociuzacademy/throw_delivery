@@ -11,7 +11,8 @@ class DocumentUploadPage extends StatefulWidget {
   @override
   State<DocumentUploadPage> createState() => _DocumentUploadPageState();
 
-  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => DocumentUploadPage());
+  static MaterialPageRoute route() =>
+      MaterialPageRoute(builder: (_) => const DocumentUploadPage());
 }
 
 class _DocumentUploadPageState extends State<DocumentUploadPage> {
@@ -52,7 +53,9 @@ class _DocumentUploadPageState extends State<DocumentUploadPage> {
     final buttonFontSize = DocumentUploadHelper.getButtonFontSize(screenWidth);
 
     return Scaffold(
-      backgroundColor: isDark ? Color(0xFF0F1C23) : Color(0xFFF5F7F8),
+      backgroundColor: isDark
+          ? const Color(0xFF0F1C23)
+          : const Color(0xFFF5F7F8),
       appBar: AppBar(
         title: Text(
           'Upload Documents',
@@ -155,7 +158,9 @@ class _DocumentUploadPageState extends State<DocumentUploadPage> {
               width: double.infinity,
               padding: EdgeInsets.all(contentPadding),
               decoration: BoxDecoration(
-                color: isDark ? Color(0xFF0F1C23) : Color(0xFFF5F7F8),
+                color: isDark
+                    ? const Color(0xFF0F1C23)
+                    : const Color(0xFFF5F7F8),
                 border: Border(
                   top: BorderSide(
                     color: isDark ? Colors.grey[800]! : Colors.grey[200]!,
@@ -165,10 +170,10 @@ class _DocumentUploadPageState extends State<DocumentUploadPage> {
               child: ElevatedButton(
                 onPressed: _documentUploadHelper.submitDocuments,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF00AAFF),
+                  backgroundColor: const Color(0xFF00AAFF),
                   foregroundColor: Colors.white,
                   elevation: 4,
-                  shadowColor: Color(0xFF00AAFF).withValues(alpha: 0.3),
+                  shadowColor: const Color(0xFF00AAFF).withValues(alpha: 0.3),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                       screenWidth < 600 ? 10 : 12,

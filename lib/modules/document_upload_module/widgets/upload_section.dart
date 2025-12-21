@@ -45,7 +45,9 @@ class UploadSection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(cardPadding),
       decoration: BoxDecoration(
-        color: isDark ? Color(0xFF0F1C23).withValues(alpha: 0.5) : Colors.white,
+        color: isDark
+            ? const Color(0xFF0F1C23).withValues(alpha: 0.5)
+            : Colors.white,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
           color: isDark ? Colors.grey[700]! : Colors.grey[200]!,
@@ -64,10 +66,10 @@ class UploadSection extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: titleFontSize,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF00AAFF),
+                        color: const Color(0xFF00AAFF),
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       subtitle,
                       style: GoogleFonts.inter(
@@ -77,7 +79,7 @@ class UploadSection extends StatelessWidget {
                       ),
                     ),
                     if (pickedImage != null) ...[
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         '✓ Image uploaded successfully',
                         style: GoogleFonts.inter(
@@ -126,8 +128,8 @@ class UploadSection extends StatelessWidget {
           OutlinedButton(
             onPressed: onUploadPressed,
             style: OutlinedButton.styleFrom(
-              foregroundColor: Color(0xFF00AAFF),
-              backgroundColor: Color(0xFF00AAFF).withValues(alpha: 0.1),
+              foregroundColor: const Color(0xFF00AAFF),
+              backgroundColor: const Color(0xFF00AAFF).withValues(alpha: 0.1),
               side: BorderSide.none,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(borderRadius - 4),
@@ -138,7 +140,7 @@ class UploadSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.file_upload_outlined, size: iconSize),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   pickedImage != null ? 'Change $subtitle' : 'Upload $subtitle',
                   style: GoogleFonts.inter(

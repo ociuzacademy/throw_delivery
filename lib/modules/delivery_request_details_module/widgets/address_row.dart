@@ -52,7 +52,7 @@ class AddressRow extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(
@@ -60,7 +60,7 @@ class AddressRow extends StatelessWidget {
                     color: colorScheme.textLightColor,
                     size: 16,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     phone,
                     style: GoogleFonts.inter(

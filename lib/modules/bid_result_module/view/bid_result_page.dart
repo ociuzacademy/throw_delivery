@@ -37,13 +37,13 @@ class BidResultPage extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     // Colors that adapt to light and dark mode
-    final primaryColor = const Color(0xFF00BFFF);
+    const primaryColor = Color(0xFF00BFFF);
     final secondaryColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
     final accentColor = isDark
         ? const Color(0xFF374151)
         : const Color(0xFFF3F4F6);
-    final successColor = const Color(0xFF10B981);
-    final dangerColor = const Color(0xFFEF4444);
+    const successColor = Color(0xFF10B981);
+    const dangerColor = Color(0xFFEF4444);
     final textPrimaryColor = isDark ? Colors.white : const Color(0xFF1F2937);
     final textSecondaryColor = isDark
         ? Colors.grey[400]!

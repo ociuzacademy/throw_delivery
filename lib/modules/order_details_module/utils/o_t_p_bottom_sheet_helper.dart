@@ -34,7 +34,7 @@ class OTPBottomSheetHelper {
 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('OTP verified successfully!'),
           backgroundColor: Colors.green,
         ),
@@ -42,7 +42,7 @@ class OTPBottomSheetHelper {
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter a valid 4-digit OTP'),
           backgroundColor: Colors.red,
         ),

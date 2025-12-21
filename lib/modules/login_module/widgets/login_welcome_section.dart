@@ -8,7 +8,7 @@ class LoginWelcomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           'Welcome Back',
           style: TextStyle(
             fontSize: 32,

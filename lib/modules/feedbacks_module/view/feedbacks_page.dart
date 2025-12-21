@@ -7,7 +7,8 @@ import 'package:throw_delivery/modules/feedbacks_module/widgets/review_tem_widge
 class FeedbacksPage extends StatelessWidget {
   const FeedbacksPage({super.key});
 
-  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => FeedbacksPage());
+  static MaterialPageRoute route() =>
+      MaterialPageRoute(builder: (_) => const FeedbacksPage());
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class FeedbacksPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              AverageRatingCard(rating: 4.8, reviewCount: 125),
+              const AverageRatingCard(rating: 4.8, reviewCount: 125),
               const SizedBox(height: 16),
               ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),

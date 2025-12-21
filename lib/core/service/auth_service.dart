@@ -11,15 +11,20 @@ class AuthService {
 
   // Initialize Google Sign-In
   Future<void> initialize() async {
-    // Initialize GoogleSignIn with configuration
-    await _googleSignIn.initialize(
-      clientId: Platform.isIOS
-          ? '108928876199-oi5o4hmum4g86f99p76mrhsfiuhims1q.apps.googleusercontent.com'
-          : null,
-      serverClientId: Platform.isAndroid
-          ? '108928876199-kltv4ruh10h2ovjgrhuv2g3cm3tn1j9a.apps.googleusercontent.com' // Web Client ID
-          : null,
-    );
+    debugPrint('AuthService: Initializing Google Sign-In...');
+    try {
+      // Initialize GoogleSignIn with configuration
+      await _googleSignIn.initialize(
+        clientId: Platform.isIOS
+            ? '108928876199-e7mkuefqruvji197trvft27396sv5ger.apps.googleusercontent.com'
+            : null,
+        serverClientId:
+            '108928876199-kltv4ruh10h2ovjgrhuv2g3cm3tn1j9a.apps.googleusercontent.com',
+      );
+      debugPrint('AuthService: Google Sign-In initialized successfully');
+    } catch (e) {
+      debugPrint('AuthService: Failed to initialize Google Sign-In: $e');
+    }
   }
 
   // Check if user is already signed in

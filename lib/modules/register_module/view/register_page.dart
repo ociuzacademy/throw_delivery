@@ -15,7 +15,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 
   static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (_) => RegisterPage());
+      MaterialPageRoute(builder: (_) => const RegisterPage());
 }
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ? const Color(0xFF0f172a)
             : Colors.white,
         appBar: AppBar(
-          title: Text('Profile Setup'),
+          title: const Text('Profile Setup'),
           titleTextStyle: GoogleFonts.inter(
             fontSize: RegisterHelper.getTitleFontSize(
               MediaQuery.of(context).size.width,

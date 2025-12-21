@@ -12,14 +12,14 @@ class AuctionListWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Colors for light and dark mode
-    final primaryColor = const Color(0xFF00BFFF);
+    const primaryColor = Color(0xFF00BFFF);
     final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
     final textPrimaryColor = isDark ? Colors.white : const Color(0xFF1F2937);
     final textSecondaryColor = isDark
         ? Colors.grey[400]!
         : const Color(0xFF6B7280);
-    final successColor = const Color(0xFF10B981);
-    final dangerColor = const Color(0xFFEF4444);
+    const successColor = Color(0xFF10B981);
+    const dangerColor = Color(0xFFEF4444);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(

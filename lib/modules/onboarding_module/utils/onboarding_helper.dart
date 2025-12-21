@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:throw_delivery/core/storage/app_storage_functions.dart';
 import 'package:throw_delivery/modules/login_module/view/login_page.dart';
 
 import 'package:throw_delivery/modules/onboarding_module/models/onboarding_slide.dart';
@@ -17,16 +18,34 @@ class OnboardingHelper {
   });
 
   void nextPage() {
-    final current = currentPage.value;
-    if (current < slides.length - 1) {
+    if (currentPage.value < slides.length - 1) {
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to next screen or reset
-      Navigator.pushAndRemoveUntil(context, LoginPage.route(), (_) => false);
+      completeOnboarding();
     }
+  }
+
+  void skipOnboarding() {
+    completeOnboarding();
+  }
+
+  void completeOnboarding() {
+    // First, disable the intro screen for future launches
+    AppStorageFunctions.disableIntroScreen()
+        .then((_) {
+          // Then navigate to login page
+          if (!context.mounted) return;
+          Navigator.of(context).pushReplacement(LoginPage.route());
+        })
+        .catchError((error) {
+          // Even if storage fails, still navigate to login page
+          debugPrint('Error saving onboarding status: $error');
+          if (!context.mounted) return;
+          Navigator.of(context).pushReplacement(LoginPage.route());
+        });
   }
 
   // Responsive helper methods

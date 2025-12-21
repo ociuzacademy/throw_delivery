@@ -14,7 +14,7 @@ class DeliveryRequestDetailsPage extends StatelessWidget {
   const DeliveryRequestDetailsPage({super.key});
 
   static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (_) => DeliveryRequestDetailsPage());
+      MaterialPageRoute(builder: (_) => const DeliveryRequestDetailsPage());
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,8 @@ class OnboardingPage extends StatefulWidget {
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 
-  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => OnboardingPage());
+  static MaterialPageRoute route() =>
+      MaterialPageRoute(builder: (_) => const OnboardingPage());
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
@@ -21,19 +22,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
 
   final List<OnboardingSlide> _slides = [
-    OnboardingSlide(
+    const OnboardingSlide(
       icon: Icons.gavel,
       title: 'Bid on Requests',
       description:
           'Browse nearby delivery requests and place your competitive bids.',
     ),
-    OnboardingSlide(
+    const OnboardingSlide(
       icon: Icons.local_shipping,
       title: 'Deliver with Confidence',
       description:
           'Navigate routes efficiently and update delivery statuses in real-time.',
     ),
-    OnboardingSlide(
+    const OnboardingSlide(
       icon: Icons.security,
       title: 'Earn Securely',
       description:

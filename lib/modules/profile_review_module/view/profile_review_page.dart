@@ -8,7 +8,8 @@ class ProfileReviewPage extends StatefulWidget {
   @override
   State<ProfileReviewPage> createState() => _ProfileReviewPageState();
 
-  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => ProfileReviewPage());
+  static MaterialPageRoute route() =>
+      MaterialPageRoute(builder: (_) => const ProfileReviewPage());
 }
 
 class _ProfileReviewPageState extends State<ProfileReviewPage>

@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 
-  static MaterialPageRoute route() => MaterialPageRoute(builder: (_) => HomePage());
+  static MaterialPageRoute route() =>
+      MaterialPageRoute(builder: (_) => const HomePage());
 }
 
 class _HomePageState extends State<HomePage>
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage>
 
   void _initializePages() {
     _pages.addAll([
-      AuctionListWidget(),
+      const AuctionListWidget(),
       const DeliveryListWidget(),
       const WalletWidget(),
       const ProfileWidget(),
@@ -62,10 +63,10 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final _ = const Color(0xFFEF4444);
+    const _ = Color(0xFFEF4444);
 
     // Colors for light and dark mode
-    final primaryColor = const Color(0xFF00BFFF);
+    const primaryColor = Color(0xFF00BFFF);
     final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
     final textSecondaryColor = isDark
         ? Colors.grey[400]!
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage>
           : const Color(0xFFF3F4F6),
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Throw'),
+        title: const Text('Throw'),
         titleTextStyle: GoogleFonts.poppins(
           fontSize: 24,
           fontWeight: FontWeight.bold,
