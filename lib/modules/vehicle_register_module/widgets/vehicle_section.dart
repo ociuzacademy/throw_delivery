@@ -2,9 +2,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:throw_delivery/modules/register_module/providers/register_provider.dart';
-import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
-import 'package:throw_delivery/modules/register_module/widgets/custom_text_field_with_label.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/providers/register_provider.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/utils/vehicle_register_helper.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/widgets/custom_text_field_with_label.dart';
 
 class VehicleSection extends StatelessWidget {
   final bool isDark;
@@ -47,7 +47,7 @@ class VehicleSection extends StatelessWidget {
           onFieldSubmitted: (_) => vehicleModelFocusNode.requestFocus(),
           validator: provider.validateVehicleType,
         ),
-        SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
+        SizedBox(height: VehicleRegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
           controller: vehicleModelController,
           focusNode: vehicleModelFocusNode,
@@ -59,7 +59,7 @@ class VehicleSection extends StatelessWidget {
           onFieldSubmitted: (_) => licensePlateFocusNode.requestFocus(),
           validator: provider.validateVehicleModel,
         ),
-        SizedBox(height: RegisterHelper.getFieldSpacing(screenWidth)),
+        SizedBox(height: VehicleRegisterHelper.getFieldSpacing(screenWidth)),
         CustomTextFieldWithLabel(
           controller: licensePlateController,
           focusNode: licensePlateFocusNode,

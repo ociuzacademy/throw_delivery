@@ -3,24 +3,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:throw_delivery/modules/register_module/providers/register_provider.dart';
-import 'package:throw_delivery/modules/register_module/services/register_service.dart';
-import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
-import 'package:throw_delivery/modules/register_module/widgets/contact_information_section.dart';
-import 'package:throw_delivery/modules/register_module/widgets/profile_section.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/providers/register_provider.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/utils/vehicle_register_helper.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/widgets/contact_information_section.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/widgets/profile_section.dart';
 
-class RegisterBody extends StatelessWidget {
-  const RegisterBody({
+class VehicleRegisterBody extends StatelessWidget {
+  const VehicleRegisterBody({
     super.key,
     required this.formKey,
-    required this.registerService,
-    required this.context,
     required this.provider,
   });
 
   final GlobalKey<FormState> formKey;
-  final RegisterService registerService;
-  final BuildContext context;
   final RegisterProvider provider;
 
   @override
@@ -38,12 +33,14 @@ class RegisterBody extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.all(
-                RegisterHelper.getContentPadding(screenWidth),
+                VehicleRegisterHelper.getContentPadding(screenWidth),
               ),
               child: Container(
                 width: double.infinity,
                 constraints: BoxConstraints(
-                  maxWidth: RegisterHelper.getMaxContainerWidth(screenWidth),
+                  maxWidth: VehicleRegisterHelper.getMaxContainerWidth(
+                    screenWidth,
+                  ),
                 ),
                 child: Form(
                   key: formKey,
@@ -53,11 +50,12 @@ class RegisterBody extends StatelessWidget {
                       ProfileSection(
                         isDark: isDark,
                         screenWidth: screenWidth,
-                        pickImage: () => registerService.pickImage(provider),
-                        imageFile: provider.profileImage,
+                        imageUrl: provider.profileImage!,
                       ),
                       SizedBox(
-                        height: RegisterHelper.getSectionSpacing(screenWidth),
+                        height: VehicleRegisterHelper.getSectionSpacing(
+                          screenWidth,
+                        ),
                       ),
 
                       // Contact Information Section
@@ -67,19 +65,13 @@ class RegisterBody extends StatelessWidget {
                         nameController: provider.nameController,
                         emailController: provider.emailController,
                         phoneController: provider.phoneController,
-                        passwordController: provider.passwordController,
                         vehicleTypeController: provider.vehicleTypeController,
                         vehicleModelController: provider.vehicleModelController,
                         licensePlateController: provider.licensePlateController,
-                        nameFocusNode: provider.nameFocusNode,
-                        emailFocusNode: provider.emailFocusNode,
-                        phoneFocusNode: provider.phoneFocusNode,
-                        passwordFocusNode: provider.passwordFocusNode,
                         vehicleTypeFocusNode: provider.vehicleTypeFocusNode,
                         vehicleModelFocusNode: provider.vehicleModelFocusNode,
                         licensePlateFocusNode: provider.licensePlateFocusNode,
-                        register: () =>
-                            registerService.register(provider, formKey),
+                        register: () {},
                       ),
 
                       // Add extra space at the bottom for keyboard
@@ -99,7 +91,7 @@ class RegisterBody extends StatelessWidget {
           if (MediaQuery.of(context).viewInsets.bottom == 0)
             Container(
               padding: EdgeInsets.all(
-                RegisterHelper.getFooterPadding(screenWidth),
+                VehicleRegisterHelper.getFooterPadding(screenWidth),
               ),
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF0f172a) : Colors.white,
@@ -114,17 +106,19 @@ class RegisterBody extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => registerService.register(provider, formKey),
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00BFFF),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(
-                      vertical: RegisterHelper.getButtonPadding(screenWidth),
+                      vertical: VehicleRegisterHelper.getButtonPadding(
+                        screenWidth,
+                      ),
                       horizontal: 24,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
-                        RegisterHelper.getBorderRadius(screenWidth),
+                        VehicleRegisterHelper.getBorderRadius(screenWidth),
                       ),
                     ),
                     elevation: 8,
@@ -133,7 +127,9 @@ class RegisterBody extends StatelessWidget {
                   child: Text(
                     'Register',
                     style: GoogleFonts.inter(
-                      fontSize: RegisterHelper.getButtonFontSize(screenWidth),
+                      fontSize: VehicleRegisterHelper.getButtonFontSize(
+                        screenWidth,
+                      ),
                       fontWeight: FontWeight.bold,
                     ),
                   ),

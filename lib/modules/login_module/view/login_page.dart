@@ -9,7 +9,7 @@ import 'package:throw_delivery/modules/login_module/widgets/login_content.dart';
 import 'package:throw_delivery/modules/login_module/widgets/login_footer.dart';
 import 'package:throw_delivery/core/widgets/responsive_container.dart';
 import 'package:throw_delivery/modules/profile_review_module/view/profile_review_page.dart';
-import 'package:throw_delivery/modules/register_module/view/register_page.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/view/vehicle_register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -49,9 +49,10 @@ class _LoginPageState extends State<LoginPage> {
                   context: context,
                   message: 'You still haven\'t completed your registration.',
                 );
-                Navigator.of(
-                  context,
-                ).pushAndRemoveUntil(RegisterPage.route(), (route) => false);
+                Navigator.of(context).pushAndRemoveUntil(
+                  VehicleRegisterPage.route(),
+                  (route) => false,
+                );
               } else {
                 if (isApproved) {
                   CustomSnackbar.showSuccess(

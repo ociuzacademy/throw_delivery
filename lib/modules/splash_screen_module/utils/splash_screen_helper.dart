@@ -5,7 +5,7 @@ import 'package:throw_delivery/modules/home_module/view/home_page.dart';
 import 'package:throw_delivery/modules/login_module/view/login_page.dart';
 import 'package:throw_delivery/modules/onboarding_module/view/onboarding_page.dart';
 import 'package:throw_delivery/modules/profile_review_module/view/profile_review_page.dart';
-import 'package:throw_delivery/modules/register_module/view/register_page.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/view/vehicle_register_page.dart';
 
 class SplashScreenHelper {
   final BuildContext context;
@@ -27,7 +27,7 @@ class SplashScreenHelper {
     } else {
       if (isLoggedIn) {
         if (!isRegistered) {
-          Navigator.of(context).pushReplacement(RegisterPage.route());
+          Navigator.of(context).pushReplacement(VehicleRegisterPage.route());
         } else {
           if (isApproved) {
             Navigator.of(context).pushReplacement(HomePage.route());

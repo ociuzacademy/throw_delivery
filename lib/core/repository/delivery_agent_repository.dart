@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:throw_delivery/core/models/auth_response.dart';
 import 'package:throw_delivery/core/models/delivery_agent_model.dart';
-import 'package:throw_delivery/modules/register_module/classes/vehicle_data.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/classes/vehicle_data.dart';
 
 class DeliveryAgentRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instanceFor(

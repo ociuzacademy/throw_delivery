@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-class RegisterPageDivider extends StatelessWidget {
-  const RegisterPageDivider({super.key, required this.isDark});
+class VehicleRegisterPageDivider extends StatelessWidget {
+  const VehicleRegisterPageDivider({super.key, required this.isDark});
   final bool isDark;
 
   @override

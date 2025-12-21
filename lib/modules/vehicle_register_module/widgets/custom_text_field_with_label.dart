@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/typedefs/validate_text_form_input.dart';
 import 'package:throw_delivery/core/widgets/text_field/custom_text_field.dart';
-import 'package:throw_delivery/modules/register_module/utils/register_helper.dart';
+import 'package:throw_delivery/modules/vehicle_register_module/utils/vehicle_register_helper.dart';
 
 class CustomTextFieldWithLabel extends StatelessWidget {
   final TextEditingController controller;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final String label;
   final String hintText;
   final bool isDark;
@@ -19,11 +19,12 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   final Widget? suffixIcon;
   final bool isObscure;
   final ValidateTextFormInput validator;
+  final bool enabled;
 
   const CustomTextFieldWithLabel({
     super.key,
     required this.controller,
-    required this.focusNode,
+    this.focusNode,
     required this.label,
     required this.hintText,
     required this.isDark,
@@ -34,6 +35,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
     this.suffixIcon,
     this.isObscure = false,
     this.validator,
+    this.enabled = true,
   });
 
   @override
@@ -44,12 +46,12 @@ class CustomTextFieldWithLabel extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.inter(
-            fontSize: RegisterHelper.getLabelFontSize(screenWidth),
+            fontSize: VehicleRegisterHelper.getLabelFontSize(screenWidth),
             fontWeight: FontWeight.w500,
             color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
           ),
         ),
-        SizedBox(height: RegisterHelper.getLabelSpacing(screenWidth)),
+        SizedBox(height: VehicleRegisterHelper.getLabelSpacing(screenWidth)),
         CustomTextField(
           controller: controller,
           focusNode: focusNode,
@@ -61,6 +63,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
           suffixIcon: suffixIcon,
           obscureText: isObscure,
           validator: validator,
+          enabled: enabled,
         ),
       ],
     );
