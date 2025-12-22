@@ -47,11 +47,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await _deliveryAgentRepository.createOrUpdateUser(user);
           final DeliveryAgentModel? deliveryAgentModel =
               await _deliveryAgentRepository.getDeliveryAgentByUid(user.uid);
+
           emit(
             AuthState.authenticated(
               user: user,
-              isRegistered: deliveryAgentModel?.isRegistered ?? false,
-              isApproved: deliveryAgentModel?.isApproved ?? false,
+              hasVehicleRegistered:
+                  deliveryAgentModel?.hasVehicleRegistered ?? false,
+              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasDocumentUploaded:
+                  deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
           );
         } else {
@@ -102,8 +106,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(
             AuthState.authenticated(
               user: user,
-              isRegistered: deliveryAgentModel?.isRegistered ?? false,
-              isApproved: deliveryAgentModel?.isApproved ?? false,
+              hasVehicleRegistered:
+                  deliveryAgentModel?.hasVehicleRegistered ?? false,
+              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasDocumentUploaded:
+                  deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
           );
         },
@@ -156,8 +163,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(
             AuthState.authenticated(
               user: user,
-              isRegistered: deliveryAgentModel?.isRegistered ?? false,
-              isApproved: deliveryAgentModel?.isApproved ?? false,
+              hasVehicleRegistered:
+                  deliveryAgentModel?.hasVehicleRegistered ?? false,
+              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasDocumentUploaded:
+                  deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
           );
         },
@@ -203,8 +213,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         AuthState.authenticated(
           user: authenticatedState.user,
-          isRegistered: deliveryAgentModel?.isRegistered ?? false,
-          isApproved: deliveryAgentModel?.isApproved ?? false,
+          hasVehicleRegistered:
+              deliveryAgentModel?.hasVehicleRegistered ?? false,
+          hasApproved: deliveryAgentModel?.hasApproved ?? false,
+          hasDocumentUploaded: deliveryAgentModel?.hasDocumentUploaded ?? false,
         ),
       );
     } else {

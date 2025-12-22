@@ -33,17 +33,21 @@ class DeliveryAgentRepository {
       // Only set initial flags if the document doesn't exist
       // or if they are missing from the existing document
       if (!docSnap.exists) {
-        deliveryAgentData['isApproved'] = false;
-        deliveryAgentData['isRegistered'] = false;
+        deliveryAgentData['hasApproved'] = false;
+        deliveryAgentData['hasVehicleRegistered'] = false;
+        deliveryAgentData['hasDocumentUploaded'] = false;
       } else {
         final data = docSnap.data();
         if (data != null) {
           // Preserve existing values if they exist, otherwise initialize
-          if (!data.containsKey('isApproved')) {
-            deliveryAgentData['isApproved'] = false;
+          if (!data.containsKey('hasApproved')) {
+            deliveryAgentData['hasApproved'] = false;
           }
-          if (!data.containsKey('isRegistered')) {
-            deliveryAgentData['isRegistered'] = false;
+          if (!data.containsKey('hasVehicleRegistered')) {
+            deliveryAgentData['hasVehicleRegistered'] = false;
+          }
+          if (!data.containsKey('hasDocumentUploaded')) {
+            deliveryAgentData['hasDocumentUploaded'] = false;
           }
         }
       }
@@ -63,6 +67,7 @@ class DeliveryAgentRepository {
         'vehicleNumber': vehicleData.vehicleNumber,
         'vehicleType': vehicleData.vehicleType,
         'vehicleModel': vehicleData.vehicleModel,
+        'hasVehicleRegistered': true,
       };
 
       // Use UID as document ID for easy lookup
@@ -82,7 +87,10 @@ class DeliveryAgentRepository {
   // Update license image in Firestore
   Future<void> addLicenseImage(String uid, String licenseImage) async {
     try {
-      final agentLicenseData = {'licenseImageUrl': licenseImage};
+      final agentLicenseData = {
+        'licenseImageUrl': licenseImage,
+        'hasDocumentUploaded': true,
+      };
 
       // Use UID as document ID for easy lookup
       await _firestore

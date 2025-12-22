@@ -475,12 +475,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserProfile user,  bool isRegistered,  bool isApproved)?  authenticated,TResult Function()?  unauthenticated,TResult Function( String message,  String? details,  String? code)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( UserProfile user,  bool hasVehicleRegistered,  bool hasApproved,  bool hasDocumentUploaded)?  authenticated,TResult Function()?  unauthenticated,TResult Function( String message,  String? details,  String? code)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Authenticated() when authenticated != null:
-return authenticated(_that.user,_that.isRegistered,_that.isApproved);case Unauthenticated() when unauthenticated != null:
+return authenticated(_that.user,_that.hasVehicleRegistered,_that.hasApproved,_that.hasDocumentUploaded);case Unauthenticated() when unauthenticated != null:
 return unauthenticated();case AuthErrorState() when error != null:
 return error(_that.message,_that.details,_that.code);case _:
   return orElse();
@@ -500,12 +500,12 @@ return error(_that.message,_that.details,_that.code);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserProfile user,  bool isRegistered,  bool isApproved)  authenticated,required TResult Function()  unauthenticated,required TResult Function( String message,  String? details,  String? code)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( UserProfile user,  bool hasVehicleRegistered,  bool hasApproved,  bool hasDocumentUploaded)  authenticated,required TResult Function()  unauthenticated,required TResult Function( String message,  String? details,  String? code)  error,}) {final _that = this;
 switch (_that) {
 case Initial():
 return initial();case Loading():
 return loading();case Authenticated():
-return authenticated(_that.user,_that.isRegistered,_that.isApproved);case Unauthenticated():
+return authenticated(_that.user,_that.hasVehicleRegistered,_that.hasApproved,_that.hasDocumentUploaded);case Unauthenticated():
 return unauthenticated();case AuthErrorState():
 return error(_that.message,_that.details,_that.code);case _:
   throw StateError('Unexpected subclass');
@@ -524,12 +524,12 @@ return error(_that.message,_that.details,_that.code);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserProfile user,  bool isRegistered,  bool isApproved)?  authenticated,TResult? Function()?  unauthenticated,TResult? Function( String message,  String? details,  String? code)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( UserProfile user,  bool hasVehicleRegistered,  bool hasApproved,  bool hasDocumentUploaded)?  authenticated,TResult? Function()?  unauthenticated,TResult? Function( String message,  String? details,  String? code)?  error,}) {final _that = this;
 switch (_that) {
 case Initial() when initial != null:
 return initial();case Loading() when loading != null:
 return loading();case Authenticated() when authenticated != null:
-return authenticated(_that.user,_that.isRegistered,_that.isApproved);case Unauthenticated() when unauthenticated != null:
+return authenticated(_that.user,_that.hasVehicleRegistered,_that.hasApproved,_that.hasDocumentUploaded);case Unauthenticated() when unauthenticated != null:
 return unauthenticated();case AuthErrorState() when error != null:
 return error(_that.message,_that.details,_that.code);case _:
   return null;
@@ -607,12 +607,13 @@ String toString() {
 
 
 class Authenticated implements AuthState {
-  const Authenticated({required this.user, required this.isRegistered, required this.isApproved});
+  const Authenticated({required this.user, required this.hasVehicleRegistered, required this.hasApproved, required this.hasDocumentUploaded});
   
 
  final  UserProfile user;
- final  bool isRegistered;
- final  bool isApproved;
+ final  bool hasVehicleRegistered;
+ final  bool hasApproved;
+ final  bool hasDocumentUploaded;
 
 /// Create a copy of AuthState
 /// with the given fields replaced by the non-null parameter values.
@@ -624,16 +625,16 @@ $AuthenticatedCopyWith<Authenticated> get copyWith => _$AuthenticatedCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Authenticated&&(identical(other.user, user) || other.user == user)&&(identical(other.isRegistered, isRegistered) || other.isRegistered == isRegistered)&&(identical(other.isApproved, isApproved) || other.isApproved == isApproved));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Authenticated&&(identical(other.user, user) || other.user == user)&&(identical(other.hasVehicleRegistered, hasVehicleRegistered) || other.hasVehicleRegistered == hasVehicleRegistered)&&(identical(other.hasApproved, hasApproved) || other.hasApproved == hasApproved)&&(identical(other.hasDocumentUploaded, hasDocumentUploaded) || other.hasDocumentUploaded == hasDocumentUploaded));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,user,isRegistered,isApproved);
+int get hashCode => Object.hash(runtimeType,user,hasVehicleRegistered,hasApproved,hasDocumentUploaded);
 
 @override
 String toString() {
-  return 'AuthState.authenticated(user: $user, isRegistered: $isRegistered, isApproved: $isApproved)';
+  return 'AuthState.authenticated(user: $user, hasVehicleRegistered: $hasVehicleRegistered, hasApproved: $hasApproved, hasDocumentUploaded: $hasDocumentUploaded)';
 }
 
 
@@ -644,7 +645,7 @@ abstract mixin class $AuthenticatedCopyWith<$Res> implements $AuthStateCopyWith<
   factory $AuthenticatedCopyWith(Authenticated value, $Res Function(Authenticated) _then) = _$AuthenticatedCopyWithImpl;
 @useResult
 $Res call({
- UserProfile user, bool isRegistered, bool isApproved
+ UserProfile user, bool hasVehicleRegistered, bool hasApproved, bool hasDocumentUploaded
 });
 
 
@@ -661,11 +662,12 @@ class _$AuthenticatedCopyWithImpl<$Res>
 
 /// Create a copy of AuthState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? user = null,Object? isRegistered = null,Object? isApproved = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? user = null,Object? hasVehicleRegistered = null,Object? hasApproved = null,Object? hasDocumentUploaded = null,}) {
   return _then(Authenticated(
 user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as UserProfile,isRegistered: null == isRegistered ? _self.isRegistered : isRegistered // ignore: cast_nullable_to_non_nullable
-as bool,isApproved: null == isApproved ? _self.isApproved : isApproved // ignore: cast_nullable_to_non_nullable
+as UserProfile,hasVehicleRegistered: null == hasVehicleRegistered ? _self.hasVehicleRegistered : hasVehicleRegistered // ignore: cast_nullable_to_non_nullable
+as bool,hasApproved: null == hasApproved ? _self.hasApproved : hasApproved // ignore: cast_nullable_to_non_nullable
+as bool,hasDocumentUploaded: null == hasDocumentUploaded ? _self.hasDocumentUploaded : hasDocumentUploaded // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:throw_delivery/modules/document_upload_module/view/document_upload_page.dart';
 
 import 'package:throw_delivery/modules/home_module/view/home_page.dart';
 import 'package:throw_delivery/modules/login_module/view/login_page.dart';
@@ -10,33 +11,37 @@ import 'package:throw_delivery/modules/vehicle_register_module/view/vehicle_regi
 class SplashScreenHelper {
   final BuildContext context;
   final bool isFirstLaunch;
-  final bool isRegistered;
-  final bool isApproved;
+  final bool hasVehicleRegistered;
+  final bool hasApproved;
   final bool isLoggedIn;
+  final bool hasDocumentUploaded;
   const SplashScreenHelper({
     required this.context,
     required this.isFirstLaunch,
     required this.isLoggedIn,
-    this.isRegistered = false,
-    this.isApproved = false,
+    required this.hasVehicleRegistered,
+    required this.hasApproved,
+    required this.hasDocumentUploaded,
   });
 
   void navigateToNextPage() {
     if (isFirstLaunch) {
-      Navigator.of(context).pushReplacement(OnboardingPage.route());
+      Navigator.pushReplacement(context, OnboardingPage.route());
     } else {
       if (isLoggedIn) {
-        if (!isRegistered) {
-          Navigator.of(context).pushReplacement(VehicleRegisterPage.route());
+        if (!hasVehicleRegistered) {
+          Navigator.pushReplacement(context, VehicleRegisterPage.route());
+        } else if (!hasDocumentUploaded) {
+          Navigator.pushReplacement(context, DocumentUploadPage.route());
         } else {
-          if (isApproved) {
-            Navigator.of(context).pushReplacement(HomePage.route());
+          if (hasApproved) {
+            Navigator.pushReplacement(context, HomePage.route());
           } else {
-            Navigator.of(context).pushReplacement(ProfileReviewPage.route());
+            Navigator.pushReplacement(context, ProfileReviewPage.route());
           }
         }
       } else {
-        Navigator.of(context).pushReplacement(LoginPage.route());
+        Navigator.pushReplacement(context, LoginPage.route());
       }
     }
   }

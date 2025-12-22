@@ -89,11 +89,14 @@ class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         final isLoggedIn = authState is Authenticated;
-        final bool isRegistered = authState is Authenticated
-            ? authState.isRegistered
+        final bool hasVehicleRegistered = authState is Authenticated
+            ? authState.hasVehicleRegistered
             : false;
-        final bool isApproved = authState is Authenticated
-            ? authState.isApproved
+        final bool hasApproved = authState is Authenticated
+            ? authState.hasApproved
+            : false;
+        final bool hasDocumentUploaded = authState is Authenticated
+            ? authState.hasDocumentUploaded
             : false;
 
         // Show loading state while checking auth
@@ -120,8 +123,9 @@ class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
             return SplashScreen(
               isFirstLaunch: isFirstLaunch,
               isLoggedIn: isLoggedIn,
-              isRegistered: isRegistered,
-              isApproved: isApproved,
+              hasVehicleRegistered: hasVehicleRegistered,
+              hasApproved: hasApproved,
+              hasDocumentUploaded: hasDocumentUploaded,
             );
           },
         );

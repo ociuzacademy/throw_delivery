@@ -6,8 +6,9 @@ class AuthState with _$AuthState {
   const factory AuthState.loading() = Loading;
   const factory AuthState.authenticated({
     required UserProfile user,
-    required bool isRegistered,
-    required bool isApproved,
+    required bool hasVehicleRegistered,
+    required bool hasApproved,
+    required bool hasDocumentUploaded,
   }) = Authenticated;
   const factory AuthState.unauthenticated() = Unauthenticated;
   const factory AuthState.error({

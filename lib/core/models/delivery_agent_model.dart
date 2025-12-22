@@ -11,84 +11,90 @@ String deliveryAgentModelToJson(DeliveryAgentModel data) =>
     json.encode(data.toJson());
 
 class DeliveryAgentModel {
+  final String uid;
   final String displayName;
   final String email;
-  final bool isApproved;
-  final String licenseImageUrl;
   final String phoneNumber;
   final String photoUrl;
-  final String uid;
-  final String vehicleModel;
-  final String vehicleNumber;
-  final String vehicleType;
-  final bool isRegistered;
+  final String? vehicleModel;
+  final String? vehicleNumber;
+  final String? vehicleType;
+  final String? licenseImageUrl;
+  final bool hasApproved;
+  final bool hasVehicleRegistered;
+  final bool hasDocumentUploaded;
 
   DeliveryAgentModel({
+    required this.uid,
     required this.displayName,
     required this.email,
-    required this.isApproved,
-    required this.licenseImageUrl,
     required this.phoneNumber,
     required this.photoUrl,
-    required this.uid,
-    required this.vehicleModel,
-    required this.vehicleNumber,
-    required this.vehicleType,
-    required this.isRegistered,
+    this.vehicleModel,
+    this.vehicleNumber,
+    this.vehicleType,
+    this.licenseImageUrl,
+    required this.hasApproved,
+    required this.hasVehicleRegistered,
+    required this.hasDocumentUploaded,
   });
 
   DeliveryAgentModel copyWith({
+    String? uid,
     String? displayName,
     String? email,
-    bool? isApproved,
-    String? licenseImageUrl,
     String? phoneNumber,
     String? photoUrl,
-    String? uid,
     String? vehicleModel,
     String? vehicleNumber,
     String? vehicleType,
-    bool? isRegistered,
+    String? licenseImageUrl,
+    bool? hasApproved,
+    bool? hasVehicleRegistered,
+    bool? hasDocumentUploaded,
   }) => DeliveryAgentModel(
+    uid: uid ?? this.uid,
     displayName: displayName ?? this.displayName,
     email: email ?? this.email,
-    isApproved: isApproved ?? this.isApproved,
-    licenseImageUrl: licenseImageUrl ?? this.licenseImageUrl,
     phoneNumber: phoneNumber ?? this.phoneNumber,
     photoUrl: photoUrl ?? this.photoUrl,
-    uid: uid ?? this.uid,
     vehicleModel: vehicleModel ?? this.vehicleModel,
     vehicleNumber: vehicleNumber ?? this.vehicleNumber,
     vehicleType: vehicleType ?? this.vehicleType,
-    isRegistered: isRegistered ?? this.isRegistered,
+    licenseImageUrl: licenseImageUrl ?? this.licenseImageUrl,
+    hasApproved: hasApproved ?? this.hasApproved,
+    hasVehicleRegistered: hasVehicleRegistered ?? this.hasVehicleRegistered,
+    hasDocumentUploaded: hasDocumentUploaded ?? this.hasDocumentUploaded,
   );
 
   factory DeliveryAgentModel.fromJson(Map<String, dynamic> json) =>
       DeliveryAgentModel(
-        displayName: json['displayName'] ?? '',
-        email: json['email'] ?? '',
-        isApproved: json['isApproved'] ?? false,
-        licenseImageUrl: json['licenseImageUrl'] ?? '',
-        phoneNumber: json['phoneNumber'] ?? '',
-        photoUrl: json['photoUrl'] ?? '',
-        uid: json['uid'] ?? '',
-        vehicleModel: json['vehicleModel'] ?? '',
-        vehicleNumber: json['vehicleNumber'] ?? '',
-        vehicleType: json['vehicleType'] ?? '',
-        isRegistered: json['isRegistered'] ?? false,
+        uid: json['uid'] as String? ?? '',
+        displayName: json['displayName'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        phoneNumber: json['phoneNumber'] as String? ?? '',
+        photoUrl: json['photoUrl'] as String? ?? '',
+        vehicleModel: json['vehicleModel'] as String? ?? '',
+        vehicleNumber: json['vehicleNumber'] as String? ?? '',
+        vehicleType: json['vehicleType'] as String? ?? '',
+        licenseImageUrl: json['licenseImageUrl'] as String? ?? '',
+        hasApproved: json['hasApproved'] as bool? ?? false,
+        hasVehicleRegistered: json['hasVehicleRegistered'] as bool? ?? false,
+        hasDocumentUploaded: json['hasDocumentUploaded'] as bool? ?? false,
       );
 
   Map<String, dynamic> toJson() => {
+    'uid': uid,
     'displayName': displayName,
     'email': email,
-    'isApproved': isApproved,
-    'licenseImageUrl': licenseImageUrl,
     'phoneNumber': phoneNumber,
     'photoUrl': photoUrl,
-    'uid': uid,
     'vehicleModel': vehicleModel,
     'vehicleNumber': vehicleNumber,
     'vehicleType': vehicleType,
-    'isRegistered': isRegistered,
+    'licenseImageUrl': licenseImageUrl,
+    'hasApproved': hasApproved,
+    'hasVehicleRegistered': hasVehicleRegistered,
+    'hasDocumentUploaded': hasDocumentUploaded,
   };
 }

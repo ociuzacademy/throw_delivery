@@ -7,14 +7,16 @@ import 'package:throw_delivery/modules/splash_screen_module/utils/splash_screen_
 class SplashScreen extends StatefulWidget {
   final bool isFirstLaunch;
   final bool isLoggedIn;
-  final bool isRegistered;
-  final bool isApproved;
+  final bool hasVehicleRegistered;
+  final bool hasApproved;
+  final bool hasDocumentUploaded;
   const SplashScreen({
     super.key,
     required this.isFirstLaunch,
     required this.isLoggedIn,
-    this.isRegistered = false,
-    this.isApproved = false,
+    required this.hasVehicleRegistered,
+    required this.hasApproved,
+    required this.hasDocumentUploaded,
   });
 
   @override
@@ -32,8 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
       context: context,
       isFirstLaunch: widget.isFirstLaunch,
       isLoggedIn: widget.isLoggedIn,
-      isRegistered: widget.isRegistered,
-      isApproved: widget.isApproved,
+      hasVehicleRegistered: widget.hasVehicleRegistered,
+      hasApproved: widget.hasApproved,
+      hasDocumentUploaded: widget.hasDocumentUploaded,
     );
     // Set up timer to navigate after 3 seconds
     _navigationTimer = Timer(

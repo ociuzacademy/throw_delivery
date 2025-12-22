@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:throw_delivery/core/exports/bloc_exports.dart';
 import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
+import 'package:throw_delivery/modules/document_upload_module/view/document_upload_page.dart';
 import 'package:throw_delivery/modules/home_module/view/home_page.dart';
 import 'package:throw_delivery/modules/login_module/utils/login_helper.dart';
 import 'package:throw_delivery/modules/login_module/widgets/login_header.dart';
@@ -38,23 +39,35 @@ class _LoginPageState extends State<LoginPage> {
           switch (state) {
             case Authenticated(
               user: final user,
-              isRegistered: final isRegistered,
-              isApproved: final isApproved,
+              hasVehicleRegistered: final hasVehicleRegistered,
+              hasApproved: final hasApproved,
+              hasDocumentUploaded: final hasDocumentUploaded,
             ):
               debugPrint('User: $user');
-              debugPrint('isRegistered: $isRegistered');
-              debugPrint('isApproved: $isApproved');
-              if (!isRegistered) {
+              debugPrint('hasVehicleRegistered: $hasVehicleRegistered');
+              debugPrint('hasApproved: $hasApproved');
+              debugPrint('hasDocumentUploaded: $hasDocumentUploaded');
+              if (!hasVehicleRegistered) {
                 CustomSnackbar.showInfo(
                   context: context,
-                  message: 'You still haven\'t completed your registration.',
+                  message:
+                      'You still haven\'t completed your registration of your vehicle.',
                 );
                 Navigator.of(context).pushAndRemoveUntil(
                   VehicleRegisterPage.route(),
                   (route) => false,
                 );
+              } else if (!hasDocumentUploaded) {
+                CustomSnackbar.showInfo(
+                  context: context,
+                  message: 'You still haven\'t uploaded your documents.',
+                );
+                Navigator.of(context).pushAndRemoveUntil(
+                  DocumentUploadPage.route(),
+                  (route) => false,
+                );
               } else {
-                if (isApproved) {
+                if (hasApproved) {
                   CustomSnackbar.showSuccess(
                     context: context,
                     message: 'User authenticated successfully.',

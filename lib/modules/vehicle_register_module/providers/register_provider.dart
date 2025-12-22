@@ -39,9 +39,9 @@ class RegisterProvider extends ChangeNotifier {
     _nameController.text = deliveryAgent.displayName;
     _emailController.text = deliveryAgent.email;
     _phoneController.text = deliveryAgent.phoneNumber;
-    _vehicleTypeController.text = deliveryAgent.vehicleType;
-    _vehicleModelController.text = deliveryAgent.vehicleModel;
-    _licensePlateController.text = deliveryAgent.vehicleNumber;
+    _vehicleTypeController.text = deliveryAgent.vehicleType ?? '';
+    _vehicleModelController.text = deliveryAgent.vehicleModel ?? '';
+    _licensePlateController.text = deliveryAgent.vehicleNumber ?? '';
     _profileImage = deliveryAgent.photoUrl;
     notifyListeners();
   }
