@@ -2,19 +2,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
 
 import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
-import 'package:throw_delivery/modules/profile_review_module/view/profile_review_page.dart';
 
 class DocumentUploadHelper {
   final BuildContext context;
   final ValueNotifier<File?> frontLicenseImage;
-  final ValueNotifier<File?> backLicenseImage;
   DocumentUploadHelper({
     required this.context,
     required this.frontLicenseImage,
-    required this.backLicenseImage,
   });
 
   Future<void> pickImage(ValueNotifier<File?> imageNotifier) async {
@@ -40,29 +39,17 @@ class DocumentUploadHelper {
   }
 
   void submitDocuments() {
-    if (frontLicenseImage.value == null || backLicenseImage.value == null) {
+    if (frontLicenseImage.value == null) {
       CustomSnackbar.showError(
         context: context,
-        message: 'Please upload both front and back images of your license',
+        message: 'Please upload image of your license',
       );
 
       return;
     }
 
-    CustomSnackbar.showSuccess(
-      context: context,
-      message: 'Documents submitted successfully!',
-    );
-
-    // Navigate to next screen or perform further actions
-    debugPrint('Front license: ${frontLicenseImage.value?.path}');
-    debugPrint('Back license: ${backLicenseImage.value?.path}');
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      ProfileReviewPage.route(),
-      (_) => false,
-    );
+    final LicenseUploadBloc bloc = context.read<LicenseUploadBloc>();
+    bloc.add(LicenseUploadEvent.uploadLicense(image: frontLicenseImage.value!));
   }
 
   // Responsive helper methods

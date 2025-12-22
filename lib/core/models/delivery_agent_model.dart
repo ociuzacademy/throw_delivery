@@ -3,6 +3,8 @@
 //     final deliveryAgentModel = deliveryAgentModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:throw_delivery/core/enums/appoval_status.dart';
 
 DeliveryAgentModel deliveryAgentModelFromJson(String str) =>
     DeliveryAgentModel.fromJson(json.decode(str));
@@ -20,9 +22,11 @@ class DeliveryAgentModel {
   final String? vehicleNumber;
   final String? vehicleType;
   final String? licenseImageUrl;
-  final bool hasApproved;
+  final AppovalStatus status;
   final bool hasVehicleRegistered;
   final bool hasDocumentUploaded;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   DeliveryAgentModel({
     required this.uid,
@@ -34,9 +38,11 @@ class DeliveryAgentModel {
     this.vehicleNumber,
     this.vehicleType,
     this.licenseImageUrl,
-    required this.hasApproved,
+    required this.status,
     required this.hasVehicleRegistered,
     required this.hasDocumentUploaded,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   DeliveryAgentModel copyWith({
@@ -49,9 +55,11 @@ class DeliveryAgentModel {
     String? vehicleNumber,
     String? vehicleType,
     String? licenseImageUrl,
-    bool? hasApproved,
+    AppovalStatus? status,
     bool? hasVehicleRegistered,
     bool? hasDocumentUploaded,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => DeliveryAgentModel(
     uid: uid ?? this.uid,
     displayName: displayName ?? this.displayName,
@@ -62,9 +70,11 @@ class DeliveryAgentModel {
     vehicleNumber: vehicleNumber ?? this.vehicleNumber,
     vehicleType: vehicleType ?? this.vehicleType,
     licenseImageUrl: licenseImageUrl ?? this.licenseImageUrl,
-    hasApproved: hasApproved ?? this.hasApproved,
+    status: status ?? this.status,
     hasVehicleRegistered: hasVehicleRegistered ?? this.hasVehicleRegistered,
     hasDocumentUploaded: hasDocumentUploaded ?? this.hasDocumentUploaded,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
 
   factory DeliveryAgentModel.fromJson(Map<String, dynamic> json) =>
@@ -74,14 +84,22 @@ class DeliveryAgentModel {
         email: json['email'] as String? ?? '',
         phoneNumber: json['phoneNumber'] as String? ?? '',
         photoUrl: json['photoUrl'] as String? ?? '',
-        vehicleModel: json['vehicleModel'] as String? ?? '',
-        vehicleNumber: json['vehicleNumber'] as String? ?? '',
-        vehicleType: json['vehicleType'] as String? ?? '',
-        licenseImageUrl: json['licenseImageUrl'] as String? ?? '',
-        hasApproved: json['hasApproved'] as bool? ?? false,
+        vehicleModel: json['vehicleModel'] as String?,
+        vehicleNumber: json['vehicleNumber'] as String?,
+        vehicleType: json['vehicleType'] as String?,
+        licenseImageUrl: json['licenseImageUrl'] as String?,
+        status: AppovalStatus.fromString(json['status'] as String?),
         hasVehicleRegistered: json['hasVehicleRegistered'] as bool? ?? false,
         hasDocumentUploaded: json['hasDocumentUploaded'] as bool? ?? false,
+        createdAt: _parseDateTime(json['createdAt']),
+        updatedAt: _parseDateTime(json['updatedAt']),
       );
+
+  static DateTime _parseDateTime(dynamic value) {
+    if (value is Timestamp) return value.toDate();
+    if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
+    return DateTime.now();
+  }
 
   Map<String, dynamic> toJson() => {
     'uid': uid,
@@ -93,8 +111,12 @@ class DeliveryAgentModel {
     'vehicleNumber': vehicleNumber,
     'vehicleType': vehicleType,
     'licenseImageUrl': licenseImageUrl,
-    'hasApproved': hasApproved,
+    'status': status.value,
     'hasVehicleRegistered': hasVehicleRegistered,
     'hasDocumentUploaded': hasDocumentUploaded,
+    'createdAt':
+        "${createdAt.year.toString().padLeft(4, '0')}-${createdAt.month.toString().padLeft(2, '0')}-${createdAt.day.toString().padLeft(2, '0')}",
+    'updatedAt':
+        "${updatedAt.year.toString().padLeft(4, '0')}-${updatedAt.month.toString().padLeft(2, '0')}-${updatedAt.day.toString().padLeft(2, '0')}",
   };
 }

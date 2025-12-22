@@ -41,6 +41,11 @@ class MyApp extends StatelessWidget {
             deliveryAgentRepository: deliveryAgentRepository,
           ),
         ),
+        BlocProvider(
+          create: (context) => LicenseUploadBloc(
+            deliveryAgentRepository: deliveryAgentRepository,
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Throw',

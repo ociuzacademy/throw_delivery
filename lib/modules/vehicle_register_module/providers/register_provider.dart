@@ -38,7 +38,9 @@ class RegisterProvider extends ChangeNotifier {
   void userDetailsInitFromApi(DeliveryAgentModel deliveryAgent) {
     _nameController.text = deliveryAgent.displayName;
     _emailController.text = deliveryAgent.email;
-    _phoneController.text = deliveryAgent.phoneNumber;
+    _phoneController.text = deliveryAgent.phoneNumber.isNotEmpty
+        ? deliveryAgent.phoneNumber
+        : 'Phone number not available';
     _vehicleTypeController.text = deliveryAgent.vehicleType ?? '';
     _vehicleModelController.text = deliveryAgent.vehicleModel ?? '';
     _licensePlateController.text = deliveryAgent.vehicleNumber ?? '';

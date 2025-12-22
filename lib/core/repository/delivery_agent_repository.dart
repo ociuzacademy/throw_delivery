@@ -1,8 +1,10 @@
+// delivery_agent_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:throw_delivery/core/models/auth_response.dart';
 import 'package:throw_delivery/core/models/delivery_agent_model.dart';
+import 'package:throw_delivery/core/service/storage_service.dart';
 import 'package:throw_delivery/modules/vehicle_register_module/classes/vehicle_data.dart';
 
 class DeliveryAgentRepository {
@@ -10,6 +12,7 @@ class DeliveryAgentRepository {
     app: Firebase.app(),
     databaseId: 'throw',
   );
+  final StorageService _storageService = StorageService();
 
   // Collection reference
   static const String deliveryAgentsCollection = 'deliveryAgents';
@@ -28,14 +31,19 @@ class DeliveryAgentRepository {
         'email': userProfile.email,
         'phoneNumber': userProfile.phoneNumber ?? '',
         'photoUrl': userProfile.photoUrl ?? '',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       // Only set initial flags if the document doesn't exist
       // or if they are missing from the existing document
       if (!docSnap.exists) {
-        deliveryAgentData['hasApproved'] = false;
-        deliveryAgentData['hasVehicleRegistered'] = false;
-        deliveryAgentData['hasDocumentUploaded'] = false;
+        deliveryAgentData.addAll({
+          'hasApproved': false,
+          'hasVehicleRegistered': false,
+          'hasDocumentUploaded': false,
+          'status': 'pending', // pending, approved, rejected
+        });
       } else {
         final data = docSnap.data();
         if (data != null) {
@@ -48,6 +56,9 @@ class DeliveryAgentRepository {
           }
           if (!data.containsKey('hasDocumentUploaded')) {
             deliveryAgentData['hasDocumentUploaded'] = false;
+          }
+          if (!data.containsKey('status')) {
+            deliveryAgentData['status'] = 'pending';
           }
         }
       }
@@ -68,40 +79,58 @@ class DeliveryAgentRepository {
         'vehicleType': vehicleData.vehicleType,
         'vehicleModel': vehicleData.vehicleModel,
         'hasVehicleRegistered': true,
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       // Use UID as document ID for easy lookup
       await _firestore
           .collection(deliveryAgentsCollection)
           .doc(uid)
-          .set(
-            agentVehicleData,
-            SetOptions(merge: true),
-          ); // merge: true updates instead of overwriting
+          .set(agentVehicleData, SetOptions(merge: true));
     } catch (e) {
-      debugPrint('Error saving user to Firestore: $e');
+      debugPrint('Error saving vehicle details to Firestore: $e');
       rethrow;
     }
   }
 
-  // Update license image in Firestore
-  Future<void> addLicenseImage(String uid, String licenseImage) async {
+  // UPLOAD license image AND store URL in Firestore
+  Future<String> uploadLicenseImage({
+    required String uid,
+    required String imagePath,
+  }) async {
+    try {
+      // 1. Upload image to Firebase Storage
+      final String downloadUrl = await _storageService.uploadImage(
+        uid: uid,
+        imagePath: imagePath,
+        imageType: 'license',
+      );
+
+      // 2. Update Firestore with the download URL
+      await _addLicenseImageUrl(uid, downloadUrl);
+
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading license image: $e');
+      rethrow;
+    }
+  }
+
+  // Private method to update license image URL in Firestore
+  Future<void> _addLicenseImageUrl(String uid, String licenseImageUrl) async {
     try {
       final agentLicenseData = {
-        'licenseImageUrl': licenseImage,
+        'licenseImageUrl': licenseImageUrl,
         'hasDocumentUploaded': true,
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      // Use UID as document ID for easy lookup
       await _firestore
           .collection(deliveryAgentsCollection)
           .doc(uid)
-          .set(
-            agentLicenseData,
-            SetOptions(merge: true),
-          ); // merge: true updates instead of overwriting
+          .set(agentLicenseData, SetOptions(merge: true));
     } catch (e) {
-      debugPrint('Error saving user to Firestore: $e');
+      debugPrint('Error saving license URL to Firestore: $e');
       rethrow;
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:throw_delivery/core/enums/appoval_status.dart';
 import 'package:throw_delivery/core/models/auth_response.dart';
 import 'package:throw_delivery/core/models/delivery_agent_model.dart';
 import 'package:throw_delivery/core/repository/delivery_agent_repository.dart';
@@ -53,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               user: user,
               hasVehicleRegistered:
                   deliveryAgentModel?.hasVehicleRegistered ?? false,
-              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasApproved: deliveryAgentModel?.status == AppovalStatus.approved,
               hasDocumentUploaded:
                   deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
@@ -108,7 +109,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               user: user,
               hasVehicleRegistered:
                   deliveryAgentModel?.hasVehicleRegistered ?? false,
-              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasApproved: deliveryAgentModel?.status == AppovalStatus.approved,
               hasDocumentUploaded:
                   deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
@@ -165,7 +166,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               user: user,
               hasVehicleRegistered:
                   deliveryAgentModel?.hasVehicleRegistered ?? false,
-              hasApproved: deliveryAgentModel?.hasApproved ?? false,
+              hasApproved: deliveryAgentModel?.status == AppovalStatus.approved,
               hasDocumentUploaded:
                   deliveryAgentModel?.hasDocumentUploaded ?? false,
             ),
@@ -215,7 +216,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           user: authenticatedState.user,
           hasVehicleRegistered:
               deliveryAgentModel?.hasVehicleRegistered ?? false,
-          hasApproved: deliveryAgentModel?.hasApproved ?? false,
+          hasApproved: deliveryAgentModel?.status == AppovalStatus.approved,
           hasDocumentUploaded: deliveryAgentModel?.hasDocumentUploaded ?? false,
         ),
       );
