@@ -5,7 +5,9 @@ import 'package:throw_delivery/core/theme/app_colors.dart';
 import 'package:throw_delivery/modules/home_module/widgets/info_item.dart';
 
 class PersonalInfo extends StatelessWidget {
-  const PersonalInfo({super.key});
+  const PersonalInfo({super.key, required this.email, required this.phone});
+  final String email;
+  final String phone;
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +33,16 @@ class PersonalInfo extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            InfoItem(
-              context: context,
-              icon: Icons.email_outlined,
-              text: 'john.doe@example.com',
-            ),
+            InfoItem(context: context, icon: Icons.email_outlined, text: email),
+            if (phone.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              InfoItem(
+                context: context,
+                icon: Icons.phone_outlined,
+                text: phone,
+              ),
+            ],
             const SizedBox(height: 16),
-            InfoItem(
-              context: context,
-              icon: Icons.phone_outlined,
-              text: '+1 (123) 456-7890',
-            ),
-            const SizedBox(height: 16),
-            InfoItem(
-              context: context,
-              icon: Icons.home_outlined,
-              text: '123 Main St, Anytown, USA',
-            ),
           ],
         ),
       ),
