@@ -11,10 +11,17 @@ import 'package:throw_delivery/modules/delivery_request_details_module/widgets/m
 import 'package:throw_delivery/modules/place_bid_module/view/place_bid_page.dart';
 
 class DeliveryRequestDetailsPage extends StatelessWidget {
-  const DeliveryRequestDetailsPage({super.key});
+  final String deliveryRequestId;
+  const DeliveryRequestDetailsPage({
+    super.key,
+    required this.deliveryRequestId,
+  });
 
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (_) => const DeliveryRequestDetailsPage());
+  static MaterialPageRoute route({required String deliveryRequestId}) =>
+      MaterialPageRoute(
+        builder: (_) =>
+            DeliveryRequestDetailsPage(deliveryRequestId: deliveryRequestId),
+      );
 
   @override
   Widget build(BuildContext context) {

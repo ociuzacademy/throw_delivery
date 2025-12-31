@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:throw_delivery/core/repository/delivery_agent_repository.dart';
 import 'package:throw_delivery/core/service/auth_service.dart';
 import 'package:throw_delivery/core/storage/app_storage_functions.dart';
 import 'package:throw_delivery/core/storage/auth_storage_functions.dart';
 import 'package:throw_delivery/modules/splash_screen_module/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/exports/bloc_exports.dart';
+import 'core/exports/repository_exports.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
     final AuthStorageFunctions authStorageFunctions = AuthStorageFunctions();
     final DeliveryAgentRepository deliveryAgentRepository =
         DeliveryAgentRepository();
+    final DeliveryRequestRepository deliveryRequestRepository =
+        DeliveryRequestRepository();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -44,6 +46,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LicenseUploadBloc(
             deliveryAgentRepository: deliveryAgentRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => DeliveryRequestCubit(
+            deliveryRequestRepository: deliveryRequestRepository,
           ),
         ),
       ],
