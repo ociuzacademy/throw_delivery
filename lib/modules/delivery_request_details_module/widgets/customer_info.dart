@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/helper/delivery_request_details_color_scheme.dart';
@@ -7,7 +8,6 @@ class CustomerInfo extends StatelessWidget {
   final DeliveryRequestDetailsColorScheme colorScheme;
   final DeliveryRequestDetailsResponsiveSizes responsiveSizes;
   final String name;
-  final String rating;
   final String avatarUrl;
 
   const CustomerInfo({
@@ -15,7 +15,6 @@ class CustomerInfo extends StatelessWidget {
     required this.colorScheme,
     required this.responsiveSizes,
     required this.name,
-    required this.rating,
     required this.avatarUrl,
   });
 
@@ -29,7 +28,7 @@ class CustomerInfo extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(responsiveSizes.avatarSize / 2),
             image: DecorationImage(
-              image: NetworkImage(avatarUrl),
+              image: CachedNetworkImageProvider(avatarUrl),
               fit: BoxFit.cover,
             ),
           ),
@@ -48,22 +47,6 @@ class CustomerInfo extends StatelessWidget {
                 ),
               ),
               SizedBox(height: responsiveSizes.tinySpacing),
-              Row(
-                children: [
-                  Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                  SizedBox(width: responsiveSizes.tinyHorizontalGap),
-                  Flexible(
-                    child: Text(
-                      rating,
-                      style: GoogleFonts.inter(
-                        fontSize: responsiveSizes.smallFontSize,
-                        color: colorScheme.textLightColor,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

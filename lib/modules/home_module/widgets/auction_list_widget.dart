@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:throw_delivery/core/cubit/delivery_request/delivery_request_cubit.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
 import 'package:throw_delivery/core/helper/location_helper.dart';
 import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/view/delivery_request_details_page.dart';
@@ -40,18 +40,46 @@ class _AuctionListWidgetState extends State<AuctionListWidget> {
     final textSecondaryColor = isDark
         ? Colors.grey[400]!
         : const Color(0xFF6B7280);
-    return BlocBuilder<DeliveryRequestCubit, DeliveryRequestState>(
+    return BlocBuilder<ActiveDeliveryListCubit, ActiveDeliveryListState>(
       builder: (context, state) {
         return switch (state) {
-          DeliveryRequestLoading() => const Center(
+          ActiveDeliveryListLoading() => const Center(
             child: CircularProgressIndicator(),
           ),
-          DeliveryRequestError(:final message) => CustomErrorWidget(
+          ActiveDeliveryListEmpty() => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.inventory_2_outlined,
+                  size: 80,
+                  color: textSecondaryColor.withValues(alpha: 0.3),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No Active Requests',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: textPrimaryColor,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'There are no delivery requests at the moment.',
+                  style: GoogleFonts.poppins(
+                    color: textSecondaryColor.withValues(alpha: 0.3),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ActiveDeliveryListError(:final message) => CustomErrorWidget(
             errorMessage: message,
             isDark: isDark,
             onRetry: _auctionListWidgetHelper.getActiveDeliveryRequests,
           ),
-          ActiveDeliveryRequestsLoaded(:final activeDeliveryRequests) =>
+          ActiveDeliveryListSuccess(:final activeDeliveryRequests) =>
             ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: activeDeliveryRequests.length + 1,
@@ -103,7 +131,6 @@ class _AuctionListWidgetState extends State<AuctionListWidget> {
                     textSecondaryColor: textSecondaryColor,
                     primaryColor: primaryColor,
                     onTap: () {
-                      _auctionListWidgetHelper.resetState();
                       Navigator.push(
                         context,
                         DeliveryRequestDetailsPage.route(

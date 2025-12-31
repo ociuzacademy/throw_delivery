@@ -15,7 +15,7 @@ class DeliveryRequestRepository {
   static const String deliveryRequestCollection = 'deliveryRequest';
 
   // Get user by UID
-  Future<List<DeliveryRequestModel>> getDeliveryRequestByUid() async {
+  Future<List<DeliveryRequestModel>> getActiveDeliveryRequests() async {
     try {
       final doc = await _firestore
           .collection(deliveryRequestCollection)

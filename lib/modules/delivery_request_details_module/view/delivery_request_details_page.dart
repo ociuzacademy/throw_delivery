@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/cubit/delivery_request/delivery_request_cubit.dart';
+import 'package:throw_delivery/core/helper/location_helper.dart';
+import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/helper/delivery_request_details_color_scheme.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/helper/delivery_request_details_responsive_sizes.dart';
+import 'package:throw_delivery/modules/delivery_request_details_module/utils/delivery_request_details_helper.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/address_row.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/customer_info.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/delivery_request_details_page_divider.dart';
@@ -10,7 +15,7 @@ import 'package:throw_delivery/modules/delivery_request_details_module/widgets/f
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/metric_item.dart';
 import 'package:throw_delivery/modules/place_bid_module/view/place_bid_page.dart';
 
-class DeliveryRequestDetailsPage extends StatelessWidget {
+class DeliveryRequestDetailsPage extends StatefulWidget {
   final String deliveryRequestId;
   const DeliveryRequestDetailsPage({
     super.key,
@@ -22,6 +27,26 @@ class DeliveryRequestDetailsPage extends StatelessWidget {
         builder: (_) =>
             DeliveryRequestDetailsPage(deliveryRequestId: deliveryRequestId),
       );
+
+  @override
+  State<DeliveryRequestDetailsPage> createState() =>
+      _DeliveryRequestDetailsPageState();
+}
+
+class _DeliveryRequestDetailsPageState
+    extends State<DeliveryRequestDetailsPage> {
+  late final DeliveryRequestDetailsHelper _deliveryRequestDetailsHelper;
+  @override
+  void initState() {
+    super.initState();
+    _deliveryRequestDetailsHelper = DeliveryRequestDetailsHelper(
+      context: context,
+      requestId: widget.deliveryRequestId,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _deliveryRequestDetailsHelper.getDeliveryRequestDetails();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,106 +80,138 @@ class DeliveryRequestDetailsPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-              child: Column(
-                children: [
-                  SizedBox(height: responsiveSizes.smallSpacing),
-
-                  // Customer Info Card
-                  DetailCard(
-                    colorScheme: colorScheme,
-                    responsiveSizes: responsiveSizes,
-                    child: CustomerInfo(
-                      colorScheme: colorScheme,
-                      responsiveSizes: responsiveSizes,
-                      name: 'Rohan Sharma',
-                      rating: '4.8 (120 reviews)',
-                      avatarUrl:
-                          'https://lh3.googleusercontent.com/aida-public/AB6AXuAlMFGkIH9PH4TcBZSdVygNqE4nljQ81ZWZDjLw-qO9wsA2mFzmlJhgh7Bj76yCU-ebVEqu98PZzX9WM6HNcTy2mEshPwO92h8CXkbv__33L251xbY4tfymYGvDUTTiqJdaxN0LsR2MySt2E-tct-M5g9AIrjym_S2xaN-3rsFyvMTUfXnRqcL7sDVm0H5r-pnnjfqqJZ7IzACcpkwSbfdv6YpoV2Lv1iJxxJ2ct9ZicDbNq5gq_0NE1PH9ZpCMwDNv28WNE51cK64j',
-                    ),
-                  ),
-                  SizedBox(height: responsiveSizes.mediumSpacing),
-
-                  // Address Card
-                  DetailCard(
-                    colorScheme: colorScheme,
-                    responsiveSizes: responsiveSizes,
+      body: BlocBuilder<DeliveryRequestCubit, DeliveryRequestState>(
+        builder: (context, state) {
+          return switch (state) {
+            DeliveryRequestInitial() => const SizedBox.shrink(),
+            DeliveryRequestLoading() => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            DeliveryRequestError(:final message) => CustomErrorWidget(
+              errorMessage: message,
+              isDark: isDark,
+              onRetry: _deliveryRequestDetailsHelper.getDeliveryRequestDetails,
+            ),
+            DeliveryRequestDetailsLoaded(:final deliveryRequestDetails) => Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
                     child: Column(
                       children: [
-                        AddressRow(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          icon: Icons.my_location,
-                          iconColor: colorScheme.primaryColor,
-                          title: 'Pickup Address',
-                          address: '123 Main Street, Koramangala, Bengaluru',
-                          phone: '+91 98765 43210',
-                        ),
                         SizedBox(height: responsiveSizes.smallSpacing),
-                        const DeliveryRequestDetailsPageDivider(),
-                        SizedBox(height: responsiveSizes.smallSpacing),
-                        AddressRow(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          icon: Icons.location_on,
-                          iconColor: colorScheme.dangerColor,
-                          title: 'Drop-off Address',
-                          address: '456 Oak Avenue, HSR Layout, Bengaluru',
-                          phone: '+91 87654 32109',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: responsiveSizes.mediumSpacing),
 
-                  // Metrics Card
-                  DetailCard(
-                    colorScheme: colorScheme,
-                    responsiveSizes: responsiveSizes,
-                    child: Row(
-                      children: [
-                        MetricItem(
+                        // Customer Info Card
+                        DetailCard(
                           colorScheme: colorScheme,
                           responsiveSizes: responsiveSizes,
-                          icon: Icons.social_distance,
-                          title: 'Est. Distance',
-                          value: '5.2 km',
+                          child: CustomerInfo(
+                            colorScheme: colorScheme,
+                            responsiveSizes: responsiveSizes,
+                            name: deliveryRequestDetails.customerName,
+                            avatarUrl: deliveryRequestDetails.customerAvatarUrl,
+                          ),
                         ),
-                        MetricItem(
+                        SizedBox(height: responsiveSizes.mediumSpacing),
+
+                        // Address Card
+                        DetailCard(
                           colorScheme: colorScheme,
                           responsiveSizes: responsiveSizes,
-                          icon: Icons.schedule,
-                          title: 'Delivery Time',
-                          value: 'Today, 3:00 PM',
+                          child: Column(
+                            children: [
+                              AddressRow(
+                                colorScheme: colorScheme,
+                                responsiveSizes: responsiveSizes,
+                                icon: Icons.my_location,
+                                iconColor: colorScheme.primaryColor,
+                                title: 'Pickup Address',
+                                address: deliveryRequestDetails.pickupAddress,
+                                phone: deliveryRequestDetails.pickupPhoneNumber,
+                              ),
+                              SizedBox(height: responsiveSizes.smallSpacing),
+                              const DeliveryRequestDetailsPageDivider(),
+                              SizedBox(height: responsiveSizes.smallSpacing),
+                              AddressRow(
+                                colorScheme: colorScheme,
+                                responsiveSizes: responsiveSizes,
+                                icon: Icons.location_on,
+                                iconColor: colorScheme.dangerColor,
+                                title: 'Drop-off Address',
+                                address: deliveryRequestDetails.dropOffAddress,
+                                phone:
+                                    deliveryRequestDetails.dropOffPhoneNumber,
+                              ),
+                            ],
+                          ),
                         ),
-                        MetricItem(
+                        SizedBox(height: responsiveSizes.mediumSpacing),
+
+                        // Metrics Card
+                        DetailCard(
                           colorScheme: colorScheme,
                           responsiveSizes: responsiveSizes,
-                          icon: Icons.request_quote,
-                          title: 'Base Bid',
-                          value: '\u20B9200.00',
+                          child: Row(
+                            children: [
+                              Builder(
+                                builder: (context) {
+                                  final distance =
+                                      LocationHelper.calculateDistance(
+                                        deliveryRequestDetails.pickupLocation,
+                                        deliveryRequestDetails.deliveryLocation,
+                                      );
+                                  return MetricItem(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    icon: Icons.social_distance,
+                                    title: 'Est. Distance',
+                                    value: '${distance.toStringAsFixed(2)} km',
+                                  );
+                                },
+                              ),
+                              MetricItem(
+                                colorScheme: colorScheme,
+                                responsiveSizes: responsiveSizes,
+                                icon: Icons.schedule,
+                                title: 'Delivery Time',
+                                value: deliveryRequestDetails
+                                    .preferredDeliveryTime
+                                    .value,
+                              ),
+                              MetricItem(
+                                colorScheme: colorScheme,
+                                responsiveSizes: responsiveSizes,
+                                icon: Icons.request_quote,
+                                title: 'Base Bid',
+                                value:
+                                    '\u20B9${deliveryRequestDetails.baseDeliveryCharge.toStringAsFixed(2)}',
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+
+                // Footer Button
+                FooterButton(
+                  colorScheme: colorScheme,
+                  responsiveSizes: responsiveSizes,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PlaceBidPage.route(
+                        baseBidAmount:
+                            deliveryRequestDetails.baseDeliveryCharge,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ),
-
-          // Footer Button
-          FooterButton(
-            colorScheme: colorScheme,
-            responsiveSizes: responsiveSizes,
-            onPressed: () {
-              Navigator.push(context, PlaceBidPage.route(baseBidAmount: 200.0));
-            },
-          ),
-        ],
+          };
+        },
       ),
     );
   }

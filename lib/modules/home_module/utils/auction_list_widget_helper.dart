@@ -8,14 +8,8 @@ class AuctionListWidgetHelper {
   const AuctionListWidgetHelper(this.context);
 
   void getActiveDeliveryRequests() {
-    final DeliveryRequestCubit deliveryRequestCubit = context
-        .read<DeliveryRequestCubit>();
-    deliveryRequestCubit.getActiveDeliveryRequests();
-  }
-
-  void resetState() {
-    final DeliveryRequestCubit deliveryRequestCubit = context
-        .read<DeliveryRequestCubit>();
-    deliveryRequestCubit.resetState();
+    final ActiveDeliveryListCubit activeDeliveryListCubit = context
+        .read<ActiveDeliveryListCubit>();
+    activeDeliveryListCubit.getActiveDeliveryList();
   }
 }

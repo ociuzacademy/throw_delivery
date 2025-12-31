@@ -11,17 +11,6 @@ class DeliveryRequestCubit extends Cubit<DeliveryRequestState> {
   DeliveryRequestCubit({required this.deliveryRequestRepository})
     : super(const DeliveryRequestState.initial());
 
-  Future<void> getActiveDeliveryRequests() async {
-    emit(const DeliveryRequestState.loading());
-    try {
-      final deliveryRequests = await deliveryRequestRepository
-          .getDeliveryRequestByUid();
-      emit(DeliveryRequestState.activeDeliveryRequestsLoaded(deliveryRequests));
-    } catch (e) {
-      emit(DeliveryRequestState.error(e.toString()));
-    }
-  }
-
   Future<void> getDeliveryRequestDetails(String requestId) async {
     emit(const DeliveryRequestState.loading());
     try {
@@ -31,9 +20,5 @@ class DeliveryRequestCubit extends Cubit<DeliveryRequestState> {
     } catch (e) {
       emit(DeliveryRequestState.error(e.toString()));
     }
-  }
-
-  void resetState() {
-    emit(const DeliveryRequestState.initial());
   }
 }

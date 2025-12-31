@@ -55,13 +55,12 @@ extension DeliveryRequestStatePatterns on DeliveryRequestState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DeliveryRequestInitial value)?  initial,TResult Function( DeliveryRequestLoading value)?  loading,TResult Function( ActiveDeliveryRequestsLoaded value)?  activeDeliveryRequestsLoaded,TResult Function( DeliveryRequestDetailsLoaded value)?  deliveryRequestDetailsLoaded,TResult Function( DeliveryRequestError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DeliveryRequestInitial value)?  initial,TResult Function( DeliveryRequestLoading value)?  loading,TResult Function( DeliveryRequestDetailsLoaded value)?  deliveryRequestDetailsLoaded,TResult Function( DeliveryRequestError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case DeliveryRequestInitial() when initial != null:
 return initial(_that);case DeliveryRequestLoading() when loading != null:
-return loading(_that);case ActiveDeliveryRequestsLoaded() when activeDeliveryRequestsLoaded != null:
-return activeDeliveryRequestsLoaded(_that);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
+return loading(_that);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
 return deliveryRequestDetailsLoaded(_that);case DeliveryRequestError() when error != null:
 return error(_that);case _:
   return orElse();
@@ -81,13 +80,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DeliveryRequestInitial value)  initial,required TResult Function( DeliveryRequestLoading value)  loading,required TResult Function( ActiveDeliveryRequestsLoaded value)  activeDeliveryRequestsLoaded,required TResult Function( DeliveryRequestDetailsLoaded value)  deliveryRequestDetailsLoaded,required TResult Function( DeliveryRequestError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DeliveryRequestInitial value)  initial,required TResult Function( DeliveryRequestLoading value)  loading,required TResult Function( DeliveryRequestDetailsLoaded value)  deliveryRequestDetailsLoaded,required TResult Function( DeliveryRequestError value)  error,}){
 final _that = this;
 switch (_that) {
 case DeliveryRequestInitial():
 return initial(_that);case DeliveryRequestLoading():
-return loading(_that);case ActiveDeliveryRequestsLoaded():
-return activeDeliveryRequestsLoaded(_that);case DeliveryRequestDetailsLoaded():
+return loading(_that);case DeliveryRequestDetailsLoaded():
 return deliveryRequestDetailsLoaded(_that);case DeliveryRequestError():
 return error(_that);}
 }
@@ -103,13 +101,12 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DeliveryRequestInitial value)?  initial,TResult? Function( DeliveryRequestLoading value)?  loading,TResult? Function( ActiveDeliveryRequestsLoaded value)?  activeDeliveryRequestsLoaded,TResult? Function( DeliveryRequestDetailsLoaded value)?  deliveryRequestDetailsLoaded,TResult? Function( DeliveryRequestError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DeliveryRequestInitial value)?  initial,TResult? Function( DeliveryRequestLoading value)?  loading,TResult? Function( DeliveryRequestDetailsLoaded value)?  deliveryRequestDetailsLoaded,TResult? Function( DeliveryRequestError value)?  error,}){
 final _that = this;
 switch (_that) {
 case DeliveryRequestInitial() when initial != null:
 return initial(_that);case DeliveryRequestLoading() when loading != null:
-return loading(_that);case ActiveDeliveryRequestsLoaded() when activeDeliveryRequestsLoaded != null:
-return activeDeliveryRequestsLoaded(_that);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
+return loading(_that);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
 return deliveryRequestDetailsLoaded(_that);case DeliveryRequestError() when error != null:
 return error(_that);case _:
   return null;
@@ -128,12 +125,11 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DeliveryRequestModel> activeDeliveryRequests)?  activeDeliveryRequestsLoaded,TResult Function( DeliveryRequestModel deliveryRequestDetails)?  deliveryRequestDetailsLoaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( DeliveryRequestModel deliveryRequestDetails)?  deliveryRequestDetailsLoaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DeliveryRequestInitial() when initial != null:
 return initial();case DeliveryRequestLoading() when loading != null:
-return loading();case ActiveDeliveryRequestsLoaded() when activeDeliveryRequestsLoaded != null:
-return activeDeliveryRequestsLoaded(_that.activeDeliveryRequests);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
+return loading();case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
 return deliveryRequestDetailsLoaded(_that.deliveryRequestDetails);case DeliveryRequestError() when error != null:
 return error(_that.message);case _:
   return orElse();
@@ -153,12 +149,11 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DeliveryRequestModel> activeDeliveryRequests)  activeDeliveryRequestsLoaded,required TResult Function( DeliveryRequestModel deliveryRequestDetails)  deliveryRequestDetailsLoaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( DeliveryRequestModel deliveryRequestDetails)  deliveryRequestDetailsLoaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case DeliveryRequestInitial():
 return initial();case DeliveryRequestLoading():
-return loading();case ActiveDeliveryRequestsLoaded():
-return activeDeliveryRequestsLoaded(_that.activeDeliveryRequests);case DeliveryRequestDetailsLoaded():
+return loading();case DeliveryRequestDetailsLoaded():
 return deliveryRequestDetailsLoaded(_that.deliveryRequestDetails);case DeliveryRequestError():
 return error(_that.message);}
 }
@@ -174,12 +169,11 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DeliveryRequestModel> activeDeliveryRequests)?  activeDeliveryRequestsLoaded,TResult? Function( DeliveryRequestModel deliveryRequestDetails)?  deliveryRequestDetailsLoaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( DeliveryRequestModel deliveryRequestDetails)?  deliveryRequestDetailsLoaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case DeliveryRequestInitial() when initial != null:
 return initial();case DeliveryRequestLoading() when loading != null:
-return loading();case ActiveDeliveryRequestsLoaded() when activeDeliveryRequestsLoaded != null:
-return activeDeliveryRequestsLoaded(_that.activeDeliveryRequests);case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
+return loading();case DeliveryRequestDetailsLoaded() when deliveryRequestDetailsLoaded != null:
 return deliveryRequestDetailsLoaded(_that.deliveryRequestDetails);case DeliveryRequestError() when error != null:
 return error(_that.message);case _:
   return null;
@@ -252,78 +246,6 @@ String toString() {
 
 
 
-
-/// @nodoc
-
-
-class ActiveDeliveryRequestsLoaded implements DeliveryRequestState {
-  const ActiveDeliveryRequestsLoaded(final  List<DeliveryRequestModel> activeDeliveryRequests): _activeDeliveryRequests = activeDeliveryRequests;
-  
-
- final  List<DeliveryRequestModel> _activeDeliveryRequests;
- List<DeliveryRequestModel> get activeDeliveryRequests {
-  if (_activeDeliveryRequests is EqualUnmodifiableListView) return _activeDeliveryRequests;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_activeDeliveryRequests);
-}
-
-
-/// Create a copy of DeliveryRequestState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$ActiveDeliveryRequestsLoadedCopyWith<ActiveDeliveryRequestsLoaded> get copyWith => _$ActiveDeliveryRequestsLoadedCopyWithImpl<ActiveDeliveryRequestsLoaded>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActiveDeliveryRequestsLoaded&&const DeepCollectionEquality().equals(other._activeDeliveryRequests, _activeDeliveryRequests));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_activeDeliveryRequests));
-
-@override
-String toString() {
-  return 'DeliveryRequestState.activeDeliveryRequestsLoaded(activeDeliveryRequests: $activeDeliveryRequests)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $ActiveDeliveryRequestsLoadedCopyWith<$Res> implements $DeliveryRequestStateCopyWith<$Res> {
-  factory $ActiveDeliveryRequestsLoadedCopyWith(ActiveDeliveryRequestsLoaded value, $Res Function(ActiveDeliveryRequestsLoaded) _then) = _$ActiveDeliveryRequestsLoadedCopyWithImpl;
-@useResult
-$Res call({
- List<DeliveryRequestModel> activeDeliveryRequests
-});
-
-
-
-
-}
-/// @nodoc
-class _$ActiveDeliveryRequestsLoadedCopyWithImpl<$Res>
-    implements $ActiveDeliveryRequestsLoadedCopyWith<$Res> {
-  _$ActiveDeliveryRequestsLoadedCopyWithImpl(this._self, this._then);
-
-  final ActiveDeliveryRequestsLoaded _self;
-  final $Res Function(ActiveDeliveryRequestsLoaded) _then;
-
-/// Create a copy of DeliveryRequestState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? activeDeliveryRequests = null,}) {
-  return _then(ActiveDeliveryRequestsLoaded(
-null == activeDeliveryRequests ? _self._activeDeliveryRequests : activeDeliveryRequests // ignore: cast_nullable_to_non_nullable
-as List<DeliveryRequestModel>,
-  ));
-}
-
-
-}
 
 /// @nodoc
 
