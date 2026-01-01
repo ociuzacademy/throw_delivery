@@ -58,6 +58,11 @@ class MyApp extends StatelessWidget {
             deliveryRequestRepository: deliveryRequestRepository,
           ),
         ),
+        BlocProvider(
+          create: (context) => PlaceBidBloc(
+            deliveryRequestRepository: deliveryRequestRepository,
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Throw',

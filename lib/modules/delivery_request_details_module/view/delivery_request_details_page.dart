@@ -199,11 +199,18 @@ class _DeliveryRequestDetailsPageState
                   colorScheme: colorScheme,
                   responsiveSizes: responsiveSizes,
                   onPressed: () {
+                    final DateTime auctionStartTime = deliveryRequestDetails
+                        .auctionStartingTime
+                        .toDate();
                     Navigator.push(
                       context,
                       PlaceBidPage.route(
+                        deliveryRequestId: widget.deliveryRequestId,
                         baseBidAmount:
                             deliveryRequestDetails.baseDeliveryCharge,
+                        currentMinBid:
+                            deliveryRequestDetails.minimumDeliveryCharge,
+                        auctionStartTime: auctionStartTime,
                       ),
                     );
                   },

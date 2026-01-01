@@ -25,8 +25,10 @@ class DeliveryAgentModel {
   final AppovalStatus status;
   final bool hasVehicleRegistered;
   final bool hasDocumentUploaded;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
+  final double averageRating;
+  final int numberOfRatings;
 
   DeliveryAgentModel({
     required this.uid,
@@ -43,6 +45,8 @@ class DeliveryAgentModel {
     required this.hasDocumentUploaded,
     required this.createdAt,
     required this.updatedAt,
+    required this.averageRating,
+    required this.numberOfRatings,
   });
 
   DeliveryAgentModel copyWith({
@@ -58,8 +62,10 @@ class DeliveryAgentModel {
     AppovalStatus? status,
     bool? hasVehicleRegistered,
     bool? hasDocumentUploaded,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    Timestamp? createdAt,
+    Timestamp? updatedAt,
+    double? averageRating,
+    int? numberOfRatings,
   }) => DeliveryAgentModel(
     uid: uid ?? this.uid,
     displayName: displayName ?? this.displayName,
@@ -75,6 +81,8 @@ class DeliveryAgentModel {
     hasDocumentUploaded: hasDocumentUploaded ?? this.hasDocumentUploaded,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    averageRating: averageRating ?? this.averageRating,
+    numberOfRatings: numberOfRatings ?? this.numberOfRatings,
   );
 
   factory DeliveryAgentModel.fromJson(Map<String, dynamic> json) =>
@@ -91,15 +99,11 @@ class DeliveryAgentModel {
         status: AppovalStatus.fromString(json['status'] as String?),
         hasVehicleRegistered: json['hasVehicleRegistered'] as bool? ?? false,
         hasDocumentUploaded: json['hasDocumentUploaded'] as bool? ?? false,
-        createdAt: _parseDateTime(json['createdAt']),
-        updatedAt: _parseDateTime(json['updatedAt']),
+        createdAt: json['createdAt'] as Timestamp,
+        updatedAt: json['updatedAt'] as Timestamp,
+        averageRating: (json['averageRating'] ?? 0.0).toDouble(),
+        numberOfRatings: json['numberOfRatings'] as int? ?? 0,
       );
-
-  static DateTime _parseDateTime(dynamic value) {
-    if (value is Timestamp) return value.toDate();
-    if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
-    return DateTime.now();
-  }
 
   Map<String, dynamic> toJson() => {
     'uid': uid,
@@ -115,8 +119,10 @@ class DeliveryAgentModel {
     'hasVehicleRegistered': hasVehicleRegistered,
     'hasDocumentUploaded': hasDocumentUploaded,
     'createdAt':
-        "${createdAt.year.toString().padLeft(4, '0')}-${createdAt.month.toString().padLeft(2, '0')}-${createdAt.day.toString().padLeft(2, '0')}",
+        "${createdAt.toDate().year.toString().padLeft(4, '0')}-${createdAt.toDate().month.toString().padLeft(2, '0')}-${createdAt.toDate().day.toString().padLeft(2, '0')}",
     'updatedAt':
-        "${updatedAt.year.toString().padLeft(4, '0')}-${updatedAt.month.toString().padLeft(2, '0')}-${updatedAt.day.toString().padLeft(2, '0')}",
+        "${updatedAt.toDate().year.toString().padLeft(4, '0')}-${updatedAt.toDate().month.toString().padLeft(2, '0')}-${updatedAt.toDate().day.toString().padLeft(2, '0')}",
+    'averageRating': averageRating,
+    'numberOfRatings': numberOfRatings,
   };
 }

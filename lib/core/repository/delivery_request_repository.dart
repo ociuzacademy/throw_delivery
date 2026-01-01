@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/core/exports/exception_exports.dart';
+import 'package:throw_delivery/core/models/bid_model.dart';
+import 'package:throw_delivery/core/models/delivery_agent_model.dart';
 import 'package:throw_delivery/core/models/delivery_request_model.dart';
 
 class DeliveryRequestRepository {
@@ -13,6 +15,8 @@ class DeliveryRequestRepository {
 
   // Collection reference
   static const String deliveryRequestCollection = 'deliveryRequest';
+  static const String deliveryAgentsCollection = 'deliveryAgents';
+  static const String bidsCollection = 'bids';
 
   // Get user by UID
   Future<List<DeliveryRequestModel>> getActiveDeliveryRequests() async {
@@ -51,6 +55,115 @@ class DeliveryRequestRepository {
       throw DeliveryRequestRepositoryException(
         'Error getting delivery request details by id $requestId: $e',
       );
+    }
+  }
+
+  Stream<BidModel> getBidDetails(String requestId, String bidId) {
+    try {
+      return _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .collection(bidsCollection)
+          .doc(bidId)
+          .snapshots()
+          .map((doc) {
+            if (!doc.exists) {
+              throw Exception('Bid not found');
+            }
+            return BidModel.fromJson(doc.data()!);
+          });
+    } catch (e) {
+      debugPrint('Error getting bid details: $e');
+      throw DeliveryRequestRepositoryException('Error getting bid details: $e');
+    }
+  }
+
+  // Place bid
+  Future<String> placeBid(
+    String agentId,
+    String requestId,
+    double bidAmount,
+  ) async {
+    try {
+      final doc = await _firestore
+          .collection(deliveryAgentsCollection)
+          .doc(agentId)
+          .get();
+
+      if (!doc.exists) {
+        throw Exception('Agent not found');
+      }
+
+      final DeliveryAgentModel agent = DeliveryAgentModel.fromJson(doc.data()!);
+
+      final Map<String, dynamic> bidData = {
+        'agentId': agentId,
+        'agentName': agent.displayName,
+        'agentAvatarUrl': agent.photoUrl,
+        'agentAverageRating': agent.averageRating,
+        'bidAmount': bidAmount,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'bidStatus': BidStatus.pending.value,
+      };
+
+      final docRef = _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .collection(bidsCollection)
+          .doc();
+
+      bidData['bidId'] = docRef.id;
+      await docRef.set(bidData);
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Error placing bid: $e');
+      throw DeliveryRequestRepositoryException('Error placing bid: $e');
+    }
+  }
+
+  // Accept Bargain
+  Future<void> acceptBargain(
+    String requestId,
+    String bidId,
+    double bargainAmount,
+  ) async {
+    try {
+      final Map<String, dynamic> bidData = {
+        'bargainAmount': null,
+        'bidAmount': bargainAmount,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      final docRef = _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .collection(bidsCollection)
+          .doc(bidId);
+
+      await docRef.update(bidData);
+    } catch (e) {
+      debugPrint('Error accepting bargain: $e');
+      throw DeliveryRequestRepositoryException('Error accepting bargain: $e');
+    }
+  }
+
+  // Reject Bargain
+  Future<void> rejectBargain(String requestId, String bidId) async {
+    try {
+      final Map<String, dynamic> bidData = {
+        'bargainAmount': null,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      final docRef = _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .collection(bidsCollection)
+          .doc(bidId);
+
+      await docRef.update(bidData);
+    } catch (e) {
+      debugPrint('Error rejecting bargain: $e');
+      throw DeliveryRequestRepositoryException('Error rejecting bargain: $e');
     }
   }
 }

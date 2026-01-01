@@ -9,39 +9,49 @@ import 'package:throw_delivery/modules/bidding_status_module/widgets/bid_info_ca
 import 'package:throw_delivery/modules/bidding_status_module/widgets/countdown_card.dart';
 
 class BiddingStatusPage extends StatefulWidget {
+  final String bidId;
+  final DateTime auctionStartTime;
   final double bidAmount;
   final double baseBidAmount;
   final double currentMinBid;
 
   const BiddingStatusPage({
     super.key,
+    required this.bidId,
+    required this.auctionStartTime,
     required this.bidAmount,
-    this.baseBidAmount = 20.00,
-    this.currentMinBid = 18.00,
+    required this.baseBidAmount,
+    required this.currentMinBid,
   });
 
   @override
   State<BiddingStatusPage> createState() => _BiddingStatusPageState();
 
   static MaterialPageRoute route({
+    required String bidId,
+    required DateTime auctionStartTime,
     required double bidAmount,
-    double? baseBidAmount,
-    double? currentMinBid,
+    required double baseBidAmount,
+    required double currentMinBid,
   }) => MaterialPageRoute(
     builder: (_) => BiddingStatusPage(
+      bidId: bidId,
+      auctionStartTime: auctionStartTime,
       bidAmount: bidAmount,
-      baseBidAmount: baseBidAmount ?? 200,
-      currentMinBid: currentMinBid ?? 190,
+      baseBidAmount: baseBidAmount,
+      currentMinBid: currentMinBid,
     ),
   );
 }
 
 class _BiddingStatusPageState extends State<BiddingStatusPage> {
   late final BiddingStatusHelper _biddingStatusHelper;
-  final ValueNotifier<int> _totalSecondsNotifier = ValueNotifier<int>(
-    150,
-  ); // 2 minutes 30 seconds
-  final ValueNotifier<bool> _isExpiredNotifier = ValueNotifier<bool>(false);
+  late final ValueNotifier<int> _totalSecondsNotifier = ValueNotifier<int>(
+    BiddingStatusHelper.calculateRemainingSeconds(widget.auctionStartTime),
+  );
+  late final ValueNotifier<bool> _isExpiredNotifier = ValueNotifier<bool>(
+    _totalSecondsNotifier.value <= 0,
+  );
   final ValueNotifier<double> _currentBidNotifier = ValueNotifier<double>(0.00);
   final ValueNotifier<double> _currentMinBidNotifier = ValueNotifier<double>(
     0.00,
@@ -63,6 +73,7 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
     _currentMinBidNotifier.value = widget.currentMinBid;
     _biddingStatusHelper = BiddingStatusHelper(
       context: context,
+      bidId: widget.bidId,
       totalSecondsNotifier: _totalSecondsNotifier,
       isExpiredNotifier: _isExpiredNotifier,
       currentBidNotifier: _currentBidNotifier,
@@ -73,8 +84,13 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
       baseBidAmount: widget.baseBidAmount,
       currentMinimumBid: widget.currentMinBid,
     );
-    _biddingStatusHelper.startTimer();
-    _biddingStatusHelper.startBargainSimulation();
+    if (!_isExpiredNotifier.value) {
+      _biddingStatusHelper.startTimer();
+      _biddingStatusHelper.startBargainSimulation();
+    } else {
+      _biddingStatusHelper.cancelTimer();
+      _biddingStatusHelper.cancelBargainSimulation();
+    }
   }
 
   @override

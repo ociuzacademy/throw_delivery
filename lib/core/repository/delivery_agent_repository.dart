@@ -43,6 +43,8 @@ class DeliveryAgentRepository {
           'hasVehicleRegistered': false,
           'hasDocumentUploaded': false,
           'status': 'pending', // pending, approved, rejected
+          'averageRating': 0.0,
+          'numberOfRatings': 0,
         });
       } else {
         final data = docSnap.data();

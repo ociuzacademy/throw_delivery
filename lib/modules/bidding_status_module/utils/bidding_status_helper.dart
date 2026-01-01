@@ -9,6 +9,7 @@ import 'package:throw_delivery/modules/bid_result_module/view/bid_result_page.da
 
 class BiddingStatusHelper {
   final BuildContext context;
+  final String bidId;
   late final Timer? _timer;
   late Timer? _bargainSimulationTimer;
   final ValueNotifier<int> totalSecondsNotifier;
@@ -24,6 +25,7 @@ class BiddingStatusHelper {
 
   BiddingStatusHelper({
     required this.context,
+    required this.bidId,
     required this.totalSecondsNotifier,
     required this.isExpiredNotifier,
     required this.currentBidNotifier,
@@ -50,6 +52,13 @@ class BiddingStatusHelper {
         _generateBidResult();
       }
     });
+  }
+
+  static int calculateRemainingSeconds(DateTime startTime) {
+    final now = DateTime.now();
+    final difference = now.difference(startTime);
+    final remaining = 300 - difference.inSeconds; // 5 minutes = 300 seconds
+    return remaining > 0 ? remaining : 0;
   }
 
   void _generateBidResult() {

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/loaders/overlay_loader.dart';
+import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
+import 'package:throw_delivery/modules/bidding_status_module/view/bidding_status_page.dart';
 
 import 'package:throw_delivery/modules/place_bid_module/helper/place_bid_color_scheme.dart';
 import 'package:throw_delivery/modules/place_bid_module/helper/place_bid_responsive_sizes.dart';
@@ -9,25 +14,35 @@ import 'package:throw_delivery/modules/place_bid_module/widgets/bid_input_card.d
 import 'package:throw_delivery/modules/place_bid_module/widgets/submit_bid_button.dart';
 
 class PlaceBidPage extends StatefulWidget {
+  final String deliveryRequestId;
   final double baseBidAmount;
   final double currentMinBid;
+  final DateTime auctionStartTime;
 
   const PlaceBidPage({
     super.key,
+    required this.deliveryRequestId,
     required this.baseBidAmount,
-    this.currentMinBid = 190.00,
+    required this.currentMinBid,
+    required this.auctionStartTime,
   });
 
   @override
   State<PlaceBidPage> createState() => _PlaceBidPageState();
 
-  static MaterialPageRoute route({required double baseBidAmount, double? currentMinBid}) =>
-      MaterialPageRoute(
-        builder: (_) => PlaceBidPage(
-          baseBidAmount: baseBidAmount,
-          currentMinBid: currentMinBid ?? 190.0,
-        ),
-      );
+  static MaterialPageRoute route({
+    required String deliveryRequestId,
+    required double baseBidAmount,
+    required double currentMinBid,
+    required DateTime auctionStartTime,
+  }) => MaterialPageRoute(
+    builder: (_) => PlaceBidPage(
+      deliveryRequestId: deliveryRequestId,
+      baseBidAmount: baseBidAmount,
+      currentMinBid: currentMinBid,
+      auctionStartTime: auctionStartTime,
+    ),
+  );
 }
 
 class _PlaceBidPageState extends State<PlaceBidPage> {
@@ -35,16 +50,20 @@ class _PlaceBidPageState extends State<PlaceBidPage> {
   final TextEditingController _bidAmountController = TextEditingController();
 
   // Refactored state into ValueNotifiers
-  final ValueNotifier<int> _totalSeconds = ValueNotifier<int>(
-    150,
-  ); // 2 minutes 30 seconds
-  final ValueNotifier<bool> _isExpired = ValueNotifier<bool>(false);
+  late final ValueNotifier<int> _totalSeconds = ValueNotifier<int>(
+    PlaceBidHelper.calculateRemainingSeconds(widget.auctionStartTime),
+  );
+  late final ValueNotifier<bool> _isExpired = ValueNotifier<bool>(
+    _totalSeconds.value <= 0,
+  );
 
   @override
   void initState() {
     super.initState();
     _placeBidHelper = PlaceBidHelper(
+      requestId: widget.deliveryRequestId,
       context: context,
+      auctionStartTime: widget.auctionStartTime,
       bidAmountController: _bidAmountController,
       totalSeconds: _totalSeconds,
       isExpired: _isExpired,
@@ -92,51 +111,88 @@ class _PlaceBidPageState extends State<PlaceBidPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Container(
-        color: colorScheme.backgroundColor,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-                child: Column(
-                  children: [
-                    SizedBox(height: screenHeight * 0.04),
+      body: BlocListener<PlaceBidBloc, PlaceBidState>(
+        listener: (context, state) {
+          switch (state) {
+            case PlaceBidLoading():
+              OverlayLoader.show(context, message: 'Placing bid...');
+              break;
+            case PlaceBidSuccess(:final bidId):
+              OverlayLoader.hide();
+              // _placeBidHelper.cancelTimer();
+              CustomSnackbar.showSuccess(
+                context: context,
+                message: 'Bid placed successfully with id $bidId!',
+              );
+              final double bidAmount = double.parse(
+                _bidAmountController.text.trim(),
+              );
+              Navigator.pushReplacement(
+                context,
+                BiddingStatusPage.route(
+                  bidId: bidId,
+                  auctionStartTime: widget.auctionStartTime,
+                  bidAmount: bidAmount,
+                  baseBidAmount: widget.baseBidAmount,
+                  currentMinBid: widget.currentMinBid,
+                ),
+              );
+              break;
+            case PlaceBidError(:final message):
+              OverlayLoader.hide();
+              CustomSnackbar.showError(context: context, message: message);
+              break;
+            default:
+              OverlayLoader.hide();
+              break;
+          }
+        },
+        child: Container(
+          color: colorScheme.backgroundColor,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
+                  child: Column(
+                    children: [
+                      SizedBox(height: screenHeight * 0.04),
 
-                    // Auction Info Card
-                    AuctionInfoCard(
-                      colorScheme: colorScheme,
-                      responsiveSizes: responsiveSizes,
-                      basePrice: widget.baseBidAmount,
-                      currentMinBid: widget.currentMinBid,
-                      totalSeconds: _totalSeconds,
-                      isExpired: _isExpired,
-                    ),
-                    SizedBox(height: screenHeight * 0.04),
+                      // Auction Info Card
+                      AuctionInfoCard(
+                        colorScheme: colorScheme,
+                        responsiveSizes: responsiveSizes,
+                        basePrice: widget.baseBidAmount,
+                        currentMinBid: widget.currentMinBid,
+                        totalSeconds: _totalSeconds,
+                        isExpired: _isExpired,
+                      ),
+                      SizedBox(height: screenHeight * 0.04),
 
-                    // Bid Input Card
-                    BidInputCard(
-                      colorScheme: colorScheme,
-                      responsiveSizes: responsiveSizes,
-                      bidAmountController: _bidAmountController,
-                      isExpired: _isExpired,
-                      isDark: isDark,
-                      placeBidHelper: _placeBidHelper,
-                    ),
-                    SizedBox(height: screenHeight * 0.04),
+                      // Bid Input Card
+                      BidInputCard(
+                        colorScheme: colorScheme,
+                        responsiveSizes: responsiveSizes,
+                        bidAmountController: _bidAmountController,
+                        isExpired: _isExpired,
+                        isDark: isDark,
+                        placeBidHelper: _placeBidHelper,
+                      ),
+                      SizedBox(height: screenHeight * 0.04),
 
-                    // Submit Bid Button
-                    SubmitBidButton(
-                      colorScheme: colorScheme,
-                      responsiveSizes: responsiveSizes,
-                      isExpired: _isExpired,
-                      onPressed: _placeBidHelper.submitBid,
-                    ),
-                  ],
+                      // Submit Bid Button
+                      SubmitBidButton(
+                        colorScheme: colorScheme,
+                        responsiveSizes: responsiveSizes,
+                        isExpired: _isExpired,
+                        onPressed: _placeBidHelper.submitBid,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
