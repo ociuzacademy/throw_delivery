@@ -91,13 +91,16 @@ class _AuctionListWidgetState extends State<AuctionListWidget> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            _auctionListWidgetHelper
+                                .getActiveDeliveryRequests();
+                          },
                           style: TextButton.styleFrom(
                             foregroundColor: primaryColor,
                           ),
-                          icon: const Icon(Icons.filter_list, size: 20),
+                          icon: const Icon(Icons.refresh, size: 20),
                           label: Text(
-                            'Filter',
+                            'Refresh',
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                             ),
