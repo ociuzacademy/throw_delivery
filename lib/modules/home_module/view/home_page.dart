@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage>
           color: Colors.white,
         ),
       ),
-      body: _pages[_currentIndex],
+      body: SafeArea(child: _pages[_currentIndex]),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

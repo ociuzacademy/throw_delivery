@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/enums/bid_status.dart';
+import 'package:throw_delivery/core/repository/delivery_request_repository.dart';
+import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
+import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
+import 'package:throw_delivery/modules/bid_result_module/view/bid_result_page.dart';
+import 'package:throw_delivery/modules/bidding_status_module/cubit/bid_status_cubit.dart';
 import 'package:throw_delivery/modules/bidding_status_module/helpers/bidding_status_color_scheme.dart';
 import 'package:throw_delivery/modules/bidding_status_module/helpers/bidding_status_responsive_sizes.dart';
 
@@ -9,6 +16,7 @@ import 'package:throw_delivery/modules/bidding_status_module/widgets/bid_info_ca
 import 'package:throw_delivery/modules/bidding_status_module/widgets/countdown_card.dart';
 
 class BiddingStatusPage extends StatefulWidget {
+  final String requestId;
   final String bidId;
   final DateTime auctionStartTime;
   final double bidAmount;
@@ -17,6 +25,7 @@ class BiddingStatusPage extends StatefulWidget {
 
   const BiddingStatusPage({
     super.key,
+    required this.requestId,
     required this.bidId,
     required this.auctionStartTime,
     required this.bidAmount,
@@ -28,18 +37,25 @@ class BiddingStatusPage extends StatefulWidget {
   State<BiddingStatusPage> createState() => _BiddingStatusPageState();
 
   static MaterialPageRoute route({
+    required String requestId,
     required String bidId,
     required DateTime auctionStartTime,
     required double bidAmount,
     required double baseBidAmount,
     required double currentMinBid,
   }) => MaterialPageRoute(
-    builder: (_) => BiddingStatusPage(
-      bidId: bidId,
-      auctionStartTime: auctionStartTime,
-      bidAmount: bidAmount,
-      baseBidAmount: baseBidAmount,
-      currentMinBid: currentMinBid,
+    builder: (_) => BlocProvider(
+      create: (context) =>
+          BidStatusCubit(repository: context.read<DeliveryRequestRepository>())
+            ..getBidStatus(requestId: requestId, bidId: bidId),
+      child: BiddingStatusPage(
+        requestId: requestId,
+        bidId: bidId,
+        auctionStartTime: auctionStartTime,
+        bidAmount: bidAmount,
+        baseBidAmount: baseBidAmount,
+        currentMinBid: currentMinBid,
+      ),
     ),
   );
 }
@@ -52,58 +68,30 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
   late final ValueNotifier<bool> _isExpiredNotifier = ValueNotifier<bool>(
     _totalSecondsNotifier.value <= 0,
   );
-  final ValueNotifier<double> _currentBidNotifier = ValueNotifier<double>(0.00);
-  final ValueNotifier<double> _currentMinBidNotifier = ValueNotifier<double>(
-    0.00,
-  );
-  final ValueNotifier<double> _bargainAmountNotifier = ValueNotifier<double>(
-    0.0,
-  );
-  final ValueNotifier<bool> _showBargainSectionNotifier = ValueNotifier<bool>(
-    false,
-  );
-  final ValueNotifier<bool> _hasValidBargainNotifier = ValueNotifier<bool>(
-    false,
-  );
 
   @override
   void initState() {
     super.initState();
-    _currentBidNotifier.value = widget.bidAmount;
-    _currentMinBidNotifier.value = widget.currentMinBid;
     _biddingStatusHelper = BiddingStatusHelper(
       context: context,
       bidId: widget.bidId,
       totalSecondsNotifier: _totalSecondsNotifier,
       isExpiredNotifier: _isExpiredNotifier,
-      currentBidNotifier: _currentBidNotifier,
-      currentMinBidNotifier: _currentMinBidNotifier,
-      bargainAmountNotifier: _bargainAmountNotifier,
-      showBargainSectionNotifier: _showBargainSectionNotifier,
-      hasValidBargainNotifier: _hasValidBargainNotifier,
       baseBidAmount: widget.baseBidAmount,
       currentMinimumBid: widget.currentMinBid,
     );
     if (!_isExpiredNotifier.value) {
       _biddingStatusHelper.startTimer();
-      _biddingStatusHelper.startBargainSimulation();
     } else {
       _biddingStatusHelper.cancelTimer();
-      _biddingStatusHelper.cancelBargainSimulation();
     }
   }
 
   @override
   void dispose() {
     _biddingStatusHelper.cancelTimer();
-    _biddingStatusHelper.cancelBargainSimulation();
     _totalSecondsNotifier.dispose();
     _isExpiredNotifier.dispose();
-    _currentBidNotifier.dispose();
-    _currentMinBidNotifier.dispose();
-    _bargainAmountNotifier.dispose();
-    _showBargainSectionNotifier.dispose();
-    _hasValidBargainNotifier.dispose();
     super.dispose();
   }
 
@@ -139,67 +127,117 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Center(
-        child: Container(
-          color: colorScheme.backgroundColor,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-            child: Column(
-              children: [
-                SizedBox(height: screenHeight * 0.04),
-
-                // Bid Information Card
-                ValueListenableBuilder(
-                  valueListenable: _currentMinBidNotifier,
-                  builder: (context, currentMinBid, child) {
-                    return BidInfoCard(
-                      colorScheme: colorScheme,
-                      responsiveSizes: responsiveSizes,
-                      baseBidAmount: widget.baseBidAmount,
-                      currentMinBid: currentMinBid,
-                      currentBidNotifier: _currentBidNotifier,
-                    );
-                  },
-                ),
-                SizedBox(height: screenHeight * 0.04),
-
-                // Bargain Card - Only show if bargain section is visible and has valid bargain
-                ValueListenableBuilder<bool>(
-                  valueListenable: _showBargainSectionNotifier,
-                  builder: (context, showBargain, child) {
-                    if (!showBargain || !_hasValidBargainNotifier.value) {
-                      return const SizedBox.shrink();
-                    }
-
-                    return ValueListenableBuilder<double>(
-                      valueListenable: _bargainAmountNotifier,
-                      builder: (context, bargainAmount, child) {
-                        return BargainCard(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          bargainAmount: bargainAmount,
-                          isExpiredNotifier: _isExpiredNotifier,
-                          onAccept: _biddingStatusHelper.handleAcceptBargain,
-                          onReject: _biddingStatusHelper.handleRejectBargain,
-                        );
-                      },
-                    );
-                  },
-                ),
-                SizedBox(height: screenHeight * 0.04),
-
-                // Countdown Timer Card
-                CountdownCard(
-                  colorScheme: colorScheme,
-                  responsiveSizes: responsiveSizes,
-                  totalSecondsNotifier: _totalSecondsNotifier,
-                  isExpiredNotifier: _isExpiredNotifier,
-                ),
-                SizedBox(height: screenHeight * 0.05),
-              ],
+      body: BlocConsumer<BidStatusCubit, BidStatusState>(
+        listener: (context, state) {
+          switch (state) {
+            case BidStatusSuccess(
+              bid: final bid,
+              deliveryRequest: final deliveryRequest,
+            ):
+              switch (bid.bidStatus) {
+                case BidStatus.approved:
+                  CustomSnackbar.showSuccess(
+                    context: context,
+                    message: 'Your bid has been accepted.',
+                  );
+                  Navigator.pushReplacement(
+                    context,
+                    BidResultPage.route(
+                      isBidAccepted: true,
+                      pickupAddress: deliveryRequest.pickupAddress,
+                      dropoffAddress: deliveryRequest.dropOffAddress,
+                    ),
+                  );
+                  break;
+                case BidStatus.rejected:
+                  CustomSnackbar.showError(
+                    context: context,
+                    message: 'Your bid has been rejected.',
+                  );
+                  Navigator.pushReplacement(
+                    context,
+                    BidResultPage.route(
+                      isBidAccepted: false,
+                      pickupAddress: deliveryRequest.pickupAddress,
+                      dropoffAddress: deliveryRequest.dropOffAddress,
+                    ),
+                  );
+                  break;
+                default:
+                  break;
+              }
+              break;
+            default:
+          }
+        },
+        builder: (context, state) {
+          return switch (state) {
+            BidStatusInitial() => const SizedBox.shrink(),
+            BidStatusLoading() => const Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
-        ),
+            BidStatusError(message: final message) => CustomErrorWidget(
+              errorMessage: message,
+              isDark: isDark,
+              onRetry: () => context.read<BidStatusCubit>().getBidStatus(
+                requestId: widget.requestId,
+                bidId: widget.bidId,
+              ),
+            ),
+            BidStatusSuccess(
+              bid: final bid,
+              deliveryRequest: final deliveryRequest,
+            ) =>
+              SafeArea(
+                child: Center(
+                  child: Container(
+                    color: colorScheme.backgroundColor,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(
+                        responsiveSizes.horizontalPadding,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: screenHeight * 0.04),
+                          // Bid Information Card
+                          BidInfoCard(
+                            colorScheme: colorScheme,
+                            responsiveSizes: responsiveSizes,
+                            baseBidAmount: deliveryRequest.baseDeliveryCharge,
+                            currentMinBid:
+                                deliveryRequest.minimumDeliveryCharge,
+                            currentBid: bid.bidAmount,
+                          ),
+                          SizedBox(height: screenHeight * 0.04),
+
+                          // Bargain Card - Only show if bargain section is visible and has valid bargain
+                          bid.bargainAmount != null
+                              ? BargainCard(
+                                  colorScheme: colorScheme,
+                                  responsiveSizes: responsiveSizes,
+                                  bargainAmount: bid.bargainAmount,
+                                  isExpiredNotifier: _isExpiredNotifier,
+                                  onAccept: () {},
+                                  onReject: () {},
+                                )
+                              : const SizedBox.shrink(),
+                          SizedBox(height: screenHeight * 0.04),
+                          // Countdown Timer Card
+                          CountdownCard(
+                            colorScheme: colorScheme,
+                            responsiveSizes: responsiveSizes,
+                            totalSecondsNotifier: _totalSecondsNotifier,
+                            isExpiredNotifier: _isExpiredNotifier,
+                          ),
+                          SizedBox(height: screenHeight * 0.04),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          };
+        },
       ),
     );
   }

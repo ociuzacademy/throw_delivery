@@ -14,19 +14,19 @@ class BidResultPage extends StatelessWidget {
   const BidResultPage({
     super.key,
     required this.isBidAccepted,
-    this.pickupAddress = '123 Main St',
-    this.dropoffAddress = '456 Oak Ave',
+    required this.pickupAddress,
+    required this.dropoffAddress,
   });
 
   static MaterialPageRoute route({
     required bool isBidAccepted,
-    String? pickupAddress,
-    String? dropoffAddress,
+    required String pickupAddress,
+    required String dropoffAddress,
   }) => MaterialPageRoute(
     builder: (context) => BidResultPage(
       isBidAccepted: isBidAccepted,
-      pickupAddress: pickupAddress ?? '123 Main St',
-      dropoffAddress: dropoffAddress ?? '456 Oak Ave',
+      pickupAddress: pickupAddress,
+      dropoffAddress: dropoffAddress,
     ),
   );
 
@@ -80,57 +80,59 @@ class BidResultPage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Container(
-          color: accentColor,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(horizontalPadding),
-            child: Column(
-              children: [
-                SizedBox(height: screenHeight * 0.1),
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            color: accentColor,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(horizontalPadding),
+              child: Column(
+                children: [
+                  SizedBox(height: screenHeight * 0.1),
 
-                // Conditional Card based on isBidAccepted
-                if (isBidAccepted)
-                  AcceptedCard(
-                    secondaryColor: secondaryColor,
-                    shadowColor: shadowColor,
-                    cardPadding: cardPadding,
-                    successColor: successColor,
-                    screenWidth: screenWidth,
-                    largeFontSize: largeFontSize,
-                    textSecondaryColor: textSecondaryColor,
-                    bodyFontSize: bodyFontSize,
-                    textPrimaryColor: textPrimaryColor,
-                    pickupAddress: pickupAddress,
-                    dropoffAddress: dropoffAddress,
-                    primaryColor: primaryColor,
-                    screenHeight: screenHeight,
-                    buttonFontSize: buttonFontSize,
-                    onButtonClick: () =>
-                        BidResultHelper.goToHomePage(context, isBidAccepted),
-                  )
-                else
-                  RejectedCard(
-                    secondaryColor: secondaryColor,
-                    shadowColor: shadowColor,
-                    cardPadding: cardPadding,
-                    dangerColor: dangerColor,
-                    screenWidth: screenWidth,
-                    largeFontSize: largeFontSize,
-                    textSecondaryColor: textSecondaryColor,
-                    bodyFontSize: bodyFontSize,
-                    textPrimaryColor: textPrimaryColor,
-                    pickupAddress: pickupAddress,
-                    dropoffAddress: dropoffAddress,
-                    isDark: isDark,
-                    screenHeight: screenHeight,
-                    buttonFontSize: buttonFontSize,
-                    onButtonClick: () =>
-                        BidResultHelper.goToHomePage(context, isBidAccepted),
-                  ),
+                  // Conditional Card based on isBidAccepted
+                  if (isBidAccepted)
+                    AcceptedCard(
+                      secondaryColor: secondaryColor,
+                      shadowColor: shadowColor,
+                      cardPadding: cardPadding,
+                      successColor: successColor,
+                      screenWidth: screenWidth,
+                      largeFontSize: largeFontSize,
+                      textSecondaryColor: textSecondaryColor,
+                      bodyFontSize: bodyFontSize,
+                      textPrimaryColor: textPrimaryColor,
+                      pickupAddress: pickupAddress,
+                      dropoffAddress: dropoffAddress,
+                      primaryColor: primaryColor,
+                      screenHeight: screenHeight,
+                      buttonFontSize: buttonFontSize,
+                      onButtonClick: () =>
+                          BidResultHelper.goToHomePage(context, isBidAccepted),
+                    )
+                  else
+                    RejectedCard(
+                      secondaryColor: secondaryColor,
+                      shadowColor: shadowColor,
+                      cardPadding: cardPadding,
+                      dangerColor: dangerColor,
+                      screenWidth: screenWidth,
+                      largeFontSize: largeFontSize,
+                      textSecondaryColor: textSecondaryColor,
+                      bodyFontSize: bodyFontSize,
+                      textPrimaryColor: textPrimaryColor,
+                      pickupAddress: pickupAddress,
+                      dropoffAddress: dropoffAddress,
+                      isDark: isDark,
+                      screenHeight: screenHeight,
+                      buttonFontSize: buttonFontSize,
+                      onButtonClick: () =>
+                          BidResultHelper.goToHomePage(context, isBidAccepted),
+                    ),
 
-                SizedBox(height: screenHeight * 0.1),
-              ],
+                  SizedBox(height: screenHeight * 0.1),
+                ],
+              ),
             ),
           ),
         ),

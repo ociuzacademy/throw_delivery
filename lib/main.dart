@@ -28,62 +28,68 @@ class MyApp extends StatelessWidget {
         DeliveryAgentRepository();
     final DeliveryRequestRepository deliveryRequestRepository =
         DeliveryRequestRepository();
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AuthBloc(
-            authService: authService,
-            authStorageFunctions: authStorageFunctions,
-            deliveryAgentRepository: deliveryAgentRepository,
-          ),
-        ),
-        BlocProvider(create: (context) => DeliveryAgentProfileCubit()),
-        BlocProvider(
-          create: (context) => RegisterVehicleBloc(
-            deliveryAgentRepository: deliveryAgentRepository,
-          ),
-        ),
-        BlocProvider(
-          create: (context) => LicenseUploadBloc(
-            deliveryAgentRepository: deliveryAgentRepository,
-          ),
-        ),
-        BlocProvider(
-          create: (context) => DeliveryRequestCubit(
-            deliveryRequestRepository: deliveryRequestRepository,
-          ),
-        ),
-        BlocProvider(
-          create: (context) => ActiveDeliveryListCubit(
-            deliveryRequestRepository: deliveryRequestRepository,
-          ),
-        ),
-        BlocProvider(
-          create: (context) => PlaceBidBloc(
-            deliveryRequestRepository: deliveryRequestRepository,
-          ),
-        ),
+        RepositoryProvider.value(value: deliveryAgentRepository),
+        RepositoryProvider.value(value: deliveryRequestRepository),
       ],
-      child: MaterialApp(
-        title: 'Throw',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF00BFFF),
-            brightness: Brightness.light,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authService: authService,
+              authStorageFunctions: authStorageFunctions,
+              deliveryAgentRepository: deliveryAgentRepository,
+            ),
           ),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF00BFFF),
-            brightness: Brightness.dark,
-            surface: const Color(0xFF0f1c23),
+          BlocProvider(create: (context) => DeliveryAgentProfileCubit()),
+          BlocProvider(
+            create: (context) => RegisterVehicleBloc(
+              deliveryAgentRepository: deliveryAgentRepository,
+            ),
           ),
-          useMaterial3: true,
+          BlocProvider(
+            create: (context) => LicenseUploadBloc(
+              deliveryAgentRepository: deliveryAgentRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => DeliveryRequestCubit(
+              deliveryRequestRepository: deliveryRequestRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ActiveDeliveryListCubit(
+              deliveryRequestRepository: deliveryRequestRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => PlaceBidBloc(
+              deliveryRequestRepository: deliveryRequestRepository,
+            ),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Throw',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF00BFFF),
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF00BFFF),
+              brightness: Brightness.dark,
+              surface: const Color(0xFF0f1c23),
+            ),
+            useMaterial3: true,
+          ),
+          themeMode: ThemeMode.system,
+          home: const SplashScreenWrapper(),
         ),
-        themeMode: ThemeMode.system,
-        home: const SplashScreenWrapper(),
       ),
     );
   }

@@ -47,27 +47,29 @@ class FeedbacksPage extends StatelessWidget {
 
     return Scaffold(
       appBar: FeedbackHeader(onBackPressed: () => Navigator.of(context).pop()),
-      body: Container(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? AppColors.darkBackground
-            : AppColors.lightBackground,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const AverageRatingCard(rating: 4.8, reviewCount: 125),
-              const SizedBox(height: 16),
-              ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: reviews.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  return ReviewItemWidget(review: reviews[index]);
-                },
-              ),
-            ],
+      body: SafeArea(
+        child: Container(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkBackground
+              : AppColors.lightBackground,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                const AverageRatingCard(rating: 4.8, reviewCount: 125),
+                const SizedBox(height: 16),
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: reviews.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return ReviewItemWidget(review: reviews[index]);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

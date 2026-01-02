@@ -130,6 +130,7 @@ class _PlaceBidPageState extends State<PlaceBidPage> {
               Navigator.pushReplacement(
                 context,
                 BiddingStatusPage.route(
+                  requestId: widget.deliveryRequestId,
                   bidId: bidId,
                   auctionStartTime: widget.auctionStartTime,
                   bidAmount: bidAmount,
@@ -147,51 +148,53 @@ class _PlaceBidPageState extends State<PlaceBidPage> {
               break;
           }
         },
-        child: Container(
-          color: colorScheme.backgroundColor,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-                  child: Column(
-                    children: [
-                      SizedBox(height: screenHeight * 0.04),
+        child: SafeArea(
+          child: Container(
+            color: colorScheme.backgroundColor,
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
+                    child: Column(
+                      children: [
+                        SizedBox(height: screenHeight * 0.04),
 
-                      // Auction Info Card
-                      AuctionInfoCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                        basePrice: widget.baseBidAmount,
-                        currentMinBid: widget.currentMinBid,
-                        totalSeconds: _totalSeconds,
-                        isExpired: _isExpired,
-                      ),
-                      SizedBox(height: screenHeight * 0.04),
+                        // Auction Info Card
+                        AuctionInfoCard(
+                          colorScheme: colorScheme,
+                          responsiveSizes: responsiveSizes,
+                          basePrice: widget.baseBidAmount,
+                          currentMinBid: widget.currentMinBid,
+                          totalSeconds: _totalSeconds,
+                          isExpired: _isExpired,
+                        ),
+                        SizedBox(height: screenHeight * 0.04),
 
-                      // Bid Input Card
-                      BidInputCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                        bidAmountController: _bidAmountController,
-                        isExpired: _isExpired,
-                        isDark: isDark,
-                        placeBidHelper: _placeBidHelper,
-                      ),
-                      SizedBox(height: screenHeight * 0.04),
+                        // Bid Input Card
+                        BidInputCard(
+                          colorScheme: colorScheme,
+                          responsiveSizes: responsiveSizes,
+                          bidAmountController: _bidAmountController,
+                          isExpired: _isExpired,
+                          isDark: isDark,
+                          placeBidHelper: _placeBidHelper,
+                        ),
+                        SizedBox(height: screenHeight * 0.04),
 
-                      // Submit Bid Button
-                      SubmitBidButton(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                        isExpired: _isExpired,
-                        onPressed: _placeBidHelper.submitBid,
-                      ),
-                    ],
+                        // Submit Bid Button
+                        SubmitBidButton(
+                          colorScheme: colorScheme,
+                          responsiveSizes: responsiveSizes,
+                          isExpired: _isExpired,
+                          onPressed: _placeBidHelper.submitBid,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

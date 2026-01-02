@@ -92,131 +92,147 @@ class _DeliveryRequestDetailsPageState
               isDark: isDark,
               onRetry: _deliveryRequestDetailsHelper.getDeliveryRequestDetails,
             ),
-            DeliveryRequestDetailsLoaded(:final deliveryRequestDetails) => Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-                    child: Column(
-                      children: [
-                        SizedBox(height: responsiveSizes.smallSpacing),
-
-                        // Customer Info Card
-                        DetailCard(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          child: CustomerInfo(
-                            colorScheme: colorScheme,
-                            responsiveSizes: responsiveSizes,
-                            name: deliveryRequestDetails.customerName,
-                            avatarUrl: deliveryRequestDetails.customerAvatarUrl,
-                          ),
+            DeliveryRequestDetailsLoaded(:final deliveryRequestDetails) =>
+              SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.all(
+                          responsiveSizes.horizontalPadding,
                         ),
-                        SizedBox(height: responsiveSizes.mediumSpacing),
+                        child: Column(
+                          children: [
+                            SizedBox(height: responsiveSizes.smallSpacing),
 
-                        // Address Card
-                        DetailCard(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          child: Column(
-                            children: [
-                              AddressRow(
+                            // Customer Info Card
+                            DetailCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              child: CustomerInfo(
                                 colorScheme: colorScheme,
                                 responsiveSizes: responsiveSizes,
-                                icon: Icons.my_location,
-                                iconColor: colorScheme.primaryColor,
-                                title: 'Pickup Address',
-                                address: deliveryRequestDetails.pickupAddress,
-                                phone: deliveryRequestDetails.pickupPhoneNumber,
+                                name: deliveryRequestDetails.customerName,
+                                avatarUrl:
+                                    deliveryRequestDetails.customerAvatarUrl,
                               ),
-                              SizedBox(height: responsiveSizes.smallSpacing),
-                              const DeliveryRequestDetailsPageDivider(),
-                              SizedBox(height: responsiveSizes.smallSpacing),
-                              AddressRow(
-                                colorScheme: colorScheme,
-                                responsiveSizes: responsiveSizes,
-                                icon: Icons.location_on,
-                                iconColor: colorScheme.dangerColor,
-                                title: 'Drop-off Address',
-                                address: deliveryRequestDetails.dropOffAddress,
-                                phone:
-                                    deliveryRequestDetails.dropOffPhoneNumber,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: responsiveSizes.mediumSpacing),
+                            ),
+                            SizedBox(height: responsiveSizes.mediumSpacing),
 
-                        // Metrics Card
-                        DetailCard(
-                          colorScheme: colorScheme,
-                          responsiveSizes: responsiveSizes,
-                          child: Row(
-                            children: [
-                              Builder(
-                                builder: (context) {
-                                  final distance =
-                                      LocationHelper.calculateDistance(
-                                        deliveryRequestDetails.pickupLocation,
-                                        deliveryRequestDetails.deliveryLocation,
-                                      );
-                                  return MetricItem(
+                            // Address Card
+                            DetailCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              child: Column(
+                                children: [
+                                  AddressRow(
                                     colorScheme: colorScheme,
                                     responsiveSizes: responsiveSizes,
-                                    icon: Icons.social_distance,
-                                    title: 'Est. Distance',
-                                    value: '${distance.toStringAsFixed(2)} km',
-                                  );
-                                },
+                                    icon: Icons.my_location,
+                                    iconColor: colorScheme.primaryColor,
+                                    title: 'Pickup Address',
+                                    address:
+                                        deliveryRequestDetails.pickupAddress,
+                                    phone: deliveryRequestDetails
+                                        .pickupPhoneNumber,
+                                  ),
+                                  SizedBox(
+                                    height: responsiveSizes.smallSpacing,
+                                  ),
+                                  const DeliveryRequestDetailsPageDivider(),
+                                  SizedBox(
+                                    height: responsiveSizes.smallSpacing,
+                                  ),
+                                  AddressRow(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    icon: Icons.location_on,
+                                    iconColor: colorScheme.dangerColor,
+                                    title: 'Drop-off Address',
+                                    address:
+                                        deliveryRequestDetails.dropOffAddress,
+                                    phone: deliveryRequestDetails
+                                        .dropOffPhoneNumber,
+                                  ),
+                                ],
                               ),
-                              MetricItem(
-                                colorScheme: colorScheme,
-                                responsiveSizes: responsiveSizes,
-                                icon: Icons.schedule,
-                                title: 'Delivery Time',
-                                value: deliveryRequestDetails
-                                    .preferredDeliveryTime
-                                    .value,
-                              ),
-                              MetricItem(
-                                colorScheme: colorScheme,
-                                responsiveSizes: responsiveSizes,
-                                icon: Icons.request_quote,
-                                title: 'Base Bid',
-                                value:
-                                    '\u20B9${deliveryRequestDetails.baseDeliveryCharge.toStringAsFixed(2)}',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                            ),
+                            SizedBox(height: responsiveSizes.mediumSpacing),
 
-                // Footer Button
-                FooterButton(
-                  colorScheme: colorScheme,
-                  responsiveSizes: responsiveSizes,
-                  onPressed: () {
-                    final DateTime auctionStartTime = deliveryRequestDetails
-                        .auctionStartingTime
-                        .toDate();
-                    Navigator.push(
-                      context,
-                      PlaceBidPage.route(
-                        deliveryRequestId: widget.deliveryRequestId,
-                        baseBidAmount:
-                            deliveryRequestDetails.baseDeliveryCharge,
-                        currentMinBid:
-                            deliveryRequestDetails.minimumDeliveryCharge,
-                        auctionStartTime: auctionStartTime,
+                            // Metrics Card
+                            DetailCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              child: Row(
+                                children: [
+                                  Builder(
+                                    builder: (context) {
+                                      final distance =
+                                          LocationHelper.calculateDistance(
+                                            deliveryRequestDetails
+                                                .pickupLocation,
+                                            deliveryRequestDetails
+                                                .deliveryLocation,
+                                          );
+                                      return MetricItem(
+                                        colorScheme: colorScheme,
+                                        responsiveSizes: responsiveSizes,
+                                        icon: Icons.social_distance,
+                                        title: 'Est. Distance',
+                                        value:
+                                            '${distance.toStringAsFixed(2)} km',
+                                      );
+                                    },
+                                  ),
+                                  MetricItem(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    icon: Icons.schedule,
+                                    title: 'Delivery Time',
+                                    value: deliveryRequestDetails
+                                        .preferredDeliveryTime
+                                        .value,
+                                  ),
+                                  MetricItem(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    icon: Icons.request_quote,
+                                    title: 'Base Bid',
+                                    value:
+                                        '\u20B9${deliveryRequestDetails.baseDeliveryCharge.toStringAsFixed(2)}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
+                    ),
+
+                    // Footer Button
+                    FooterButton(
+                      colorScheme: colorScheme,
+                      responsiveSizes: responsiveSizes,
+                      onPressed: () {
+                        final DateTime auctionStartTime = deliveryRequestDetails
+                            .auctionStartingTime
+                            .toDate();
+                        Navigator.push(
+                          context,
+                          PlaceBidPage.route(
+                            deliveryRequestId: widget.deliveryRequestId,
+                            baseBidAmount:
+                                deliveryRequestDetails.baseDeliveryCharge,
+                            currentMinBid:
+                                deliveryRequestDetails.minimumDeliveryCharge,
+                            auctionStartTime: auctionStartTime,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
           };
         },
       ),

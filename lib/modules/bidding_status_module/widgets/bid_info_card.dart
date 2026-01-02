@@ -8,7 +8,7 @@ class BidInfoCard extends StatelessWidget {
   final BiddingStatusResponsiveSizes responsiveSizes;
   final double baseBidAmount;
   final double currentMinBid;
-  final ValueNotifier<double> currentBidNotifier;
+  final double currentBid;
 
   const BidInfoCard({
     super.key,
@@ -16,7 +16,7 @@ class BidInfoCard extends StatelessWidget {
     required this.responsiveSizes,
     required this.baseBidAmount,
     required this.currentMinBid,
-    required this.currentBidNotifier,
+    required this.currentBid,
   });
 
   @override
@@ -35,92 +35,87 @@ class BidInfoCard extends StatelessWidget {
           ),
         ],
       ),
-      child: ValueListenableBuilder<double>(
-        valueListenable: currentBidNotifier,
-        builder: (context, currentBid, child) {
-          return Column(
+      child: Column(
+        children: [
+          // Base Bid
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Base Bid
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Base Bid:',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.bodyFontSize,
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.accentDarkColor,
-                    ),
-                  ),
-                  Text(
-                    '₹${baseBidAmount.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.priceFontSize,
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.textColor,
-                    ),
-                  ),
-                ],
+              Text(
+                'Base Bid:',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.bodyFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: colorScheme.accentDarkColor,
+                ),
               ),
-              const SizedBox(height: 16),
-
-              // Divider
-              Container(height: 1, color: colorScheme.accentLightColor),
-              const SizedBox(height: 16),
-
-              // Current Minimum Bid
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Current Minimum Bid:',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.bodyFontSize,
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.accentDarkColor,
-                    ),
-                  ),
-                  Text(
-                    '₹${currentMinBid.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.priceFontSize,
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Divider
-              Container(height: 1, color: colorScheme.accentLightColor),
-              const SizedBox(height: 16),
-
-              // Your Bid
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Your Bid:',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.bodyFontSize,
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.accentDarkColor,
-                    ),
-                  ),
-                  Text(
-                    '₹${currentBid.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.priceFontSize,
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.statusGreen,
-                    ),
-                  ),
-                ],
+              Text(
+                '₹${baseBidAmount.toStringAsFixed(2)}',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.priceFontSize,
+                  fontWeight: FontWeight.w700,
+                  color: colorScheme.textColor,
+                ),
               ),
             ],
-          );
-        },
+          ),
+          const SizedBox(height: 16),
+
+          // Divider
+          Container(height: 1, color: colorScheme.accentLightColor),
+          const SizedBox(height: 16),
+
+          // Current Minimum Bid
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Current Minimum Bid:',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.bodyFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: colorScheme.accentDarkColor,
+                ),
+              ),
+              Text(
+                '₹${currentMinBid.toStringAsFixed(2)}',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.priceFontSize,
+                  fontWeight: FontWeight.w700,
+                  color: colorScheme.primaryColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Divider
+          Container(height: 1, color: colorScheme.accentLightColor),
+          const SizedBox(height: 16),
+
+          // Your Bid
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Your Bid:',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.bodyFontSize,
+                  fontWeight: FontWeight.w500,
+                  color: colorScheme.accentDarkColor,
+                ),
+              ),
+              Text(
+                '₹${currentBid.toStringAsFixed(2)}',
+                style: GoogleFonts.inter(
+                  fontSize: responsiveSizes.priceFontSize,
+                  fontWeight: FontWeight.w700,
+                  color: colorScheme.statusGreen,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

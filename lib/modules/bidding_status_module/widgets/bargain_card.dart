@@ -6,7 +6,7 @@ import 'package:throw_delivery/modules/bidding_status_module/helpers/bidding_sta
 class BargainCard extends StatelessWidget {
   final BiddingStatusColorScheme colorScheme;
   final BiddingStatusResponsiveSizes responsiveSizes;
-  final double bargainAmount;
+  final double? bargainAmount;
   final ValueNotifier<bool> isExpiredNotifier;
   final VoidCallback onAccept;
   final VoidCallback onReject;
@@ -15,7 +15,7 @@ class BargainCard extends StatelessWidget {
     super.key,
     required this.colorScheme,
     required this.responsiveSizes,
-    required this.bargainAmount,
+    this.bargainAmount,
     required this.isExpiredNotifier,
     required this.onAccept,
     required this.onReject,
@@ -55,7 +55,7 @@ class BargainCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '₹${bargainAmount.toStringAsFixed(2)}',
+                    '₹${bargainAmount?.toStringAsFixed(2) ?? 'N/A'}',
                     style: GoogleFonts.inter(
                       fontSize: responsiveSizes.priceFontSize,
                       fontWeight: FontWeight.w700,
