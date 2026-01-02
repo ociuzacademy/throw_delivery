@@ -5,3 +5,4 @@ export 'package:throw_delivery/modules/document_upload_module/bloc/license_uploa
 export 'package:throw_delivery/core/cubit/delivery_request/delivery_request_cubit.dart';
 export 'package:throw_delivery/modules/home_module/cubit/active_delivery_list/active_delivery_list_cubit.dart';
 export 'package:throw_delivery/modules/place_bid_module/bloc/place_bid_bloc.dart';
+export 'package:throw_delivery/modules/bidding_status_module/bloc/bargain_action_bloc.dart';

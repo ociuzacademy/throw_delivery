@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/enums/bid_status.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
 import 'package:throw_delivery/core/repository/delivery_request_repository.dart';
 import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
+import 'package:throw_delivery/core/widgets/loaders/overlay_loader.dart';
 import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
 import 'package:throw_delivery/modules/bid_result_module/view/bid_result_page.dart';
 import 'package:throw_delivery/modules/bidding_status_module/cubit/bid_status_cubit.dart';
@@ -74,6 +76,7 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
     super.initState();
     _biddingStatusHelper = BiddingStatusHelper(
       context: context,
+      requestId: widget.requestId,
       bidId: widget.bidId,
       totalSecondsNotifier: _totalSecondsNotifier,
       isExpiredNotifier: _isExpiredNotifier,
@@ -127,117 +130,163 @@ class _BiddingStatusPageState extends State<BiddingStatusPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: BlocConsumer<BidStatusCubit, BidStatusState>(
-        listener: (context, state) {
-          switch (state) {
-            case BidStatusSuccess(
-              bid: final bid,
-              deliveryRequest: final deliveryRequest,
-            ):
-              switch (bid.bidStatus) {
-                case BidStatus.approved:
-                  CustomSnackbar.showSuccess(
-                    context: context,
-                    message: 'Your bid has been accepted.',
-                  );
-                  Navigator.pushReplacement(
-                    context,
-                    BidResultPage.route(
-                      isBidAccepted: true,
-                      pickupAddress: deliveryRequest.pickupAddress,
-                      dropoffAddress: deliveryRequest.dropOffAddress,
-                    ),
-                  );
-                  break;
-                case BidStatus.rejected:
-                  CustomSnackbar.showError(
-                    context: context,
-                    message: 'Your bid has been rejected.',
-                  );
-                  Navigator.pushReplacement(
-                    context,
-                    BidResultPage.route(
-                      isBidAccepted: false,
-                      pickupAddress: deliveryRequest.pickupAddress,
-                      dropoffAddress: deliveryRequest.dropOffAddress,
-                    ),
-                  );
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<BidStatusCubit, BidStatusState>(
+            listener: (context, state) {
+              switch (state) {
+                case BidStatusSuccess(
+                  bid: final bid,
+                  deliveryRequest: final deliveryRequest,
+                ):
+                  switch (bid.bidStatus) {
+                    case BidStatus.approved:
+                      CustomSnackbar.showSuccess(
+                        context: context,
+                        message: 'Your bid has been accepted.',
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        BidResultPage.route(
+                          isBidAccepted: true,
+                          pickupAddress: deliveryRequest.pickupAddress,
+                          dropoffAddress: deliveryRequest.dropOffAddress,
+                        ),
+                      );
+                      break;
+                    case BidStatus.rejected:
+                      CustomSnackbar.showError(
+                        context: context,
+                        message: 'Your bid has been rejected.',
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        BidResultPage.route(
+                          isBidAccepted: false,
+                          pickupAddress: deliveryRequest.pickupAddress,
+                          dropoffAddress: deliveryRequest.dropOffAddress,
+                        ),
+                      );
+                      break;
+                    default:
+                      break;
+                  }
                   break;
                 default:
+              }
+            },
+          ),
+          BlocListener<BargainActionBloc, BargainActionState>(
+            listener: (context, state) {
+              switch (state) {
+                case BargainActionLoading(message: final message):
+                  OverlayLoader.show(context, message: message);
+                  break;
+                case AcceptBargainSuccess _:
+                  OverlayLoader.hide();
+                  CustomSnackbar.showInfo(
+                    context: context,
+                    message: 'Bargain accepted successfully.',
+                  );
+                  break;
+                case RejectBargainSuccess _:
+                  OverlayLoader.hide();
+                  CustomSnackbar.showInfo(
+                    context: context,
+                    message: 'Bargain rejected successfully.',
+                  );
+                  break;
+                case BargainActionError(message: final message):
+                  OverlayLoader.hide();
+                  CustomSnackbar.showError(context: context, message: message);
+                  break;
+                default:
+                  OverlayLoader.hide();
                   break;
               }
-              break;
-            default:
-          }
-        },
-        builder: (context, state) {
-          return switch (state) {
-            BidStatusInitial() => const SizedBox.shrink(),
-            BidStatusLoading() => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            BidStatusError(message: final message) => CustomErrorWidget(
-              errorMessage: message,
-              isDark: isDark,
-              onRetry: () => context.read<BidStatusCubit>().getBidStatus(
-                requestId: widget.requestId,
-                bidId: widget.bidId,
+            },
+          ),
+        ],
+        child: BlocBuilder<BidStatusCubit, BidStatusState>(
+          builder: (context, state) {
+            return switch (state) {
+              BidStatusInitial() => const SizedBox.shrink(),
+              BidStatusLoading() => const Center(
+                child: CircularProgressIndicator(),
               ),
-            ),
-            BidStatusSuccess(
-              bid: final bid,
-              deliveryRequest: final deliveryRequest,
-            ) =>
-              SafeArea(
-                child: Center(
-                  child: Container(
-                    color: colorScheme.backgroundColor,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(
-                        responsiveSizes.horizontalPadding,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: screenHeight * 0.04),
-                          // Bid Information Card
-                          BidInfoCard(
-                            colorScheme: colorScheme,
-                            responsiveSizes: responsiveSizes,
-                            baseBidAmount: deliveryRequest.baseDeliveryCharge,
-                            currentMinBid:
-                                deliveryRequest.minimumDeliveryCharge,
-                            currentBid: bid.bidAmount,
-                          ),
-                          SizedBox(height: screenHeight * 0.04),
+              BidStatusError(message: final message) => CustomErrorWidget(
+                errorMessage: message,
+                isDark: isDark,
+                onRetry: () => context.read<BidStatusCubit>().getBidStatus(
+                  requestId: widget.requestId,
+                  bidId: widget.bidId,
+                ),
+              ),
+              BidStatusSuccess(
+                bid: final bid,
+                deliveryRequest: final deliveryRequest,
+              ) =>
+                SafeArea(
+                  child: Center(
+                    child: Container(
+                      color: colorScheme.backgroundColor,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.all(
+                          responsiveSizes.horizontalPadding,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(height: screenHeight * 0.04),
+                            // Bid Information Card
+                            BidInfoCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              baseBidAmount: deliveryRequest.baseDeliveryCharge,
+                              currentMinBid:
+                                  deliveryRequest.minimumDeliveryCharge,
+                              currentBid: bid.bidAmount,
+                            ),
+                            SizedBox(height: screenHeight * 0.04),
 
-                          // Bargain Card - Only show if bargain section is visible and has valid bargain
-                          bid.bargainAmount != null
-                              ? BargainCard(
-                                  colorScheme: colorScheme,
-                                  responsiveSizes: responsiveSizes,
-                                  bargainAmount: bid.bargainAmount,
-                                  isExpiredNotifier: _isExpiredNotifier,
-                                  onAccept: () {},
-                                  onReject: () {},
-                                )
-                              : const SizedBox.shrink(),
-                          SizedBox(height: screenHeight * 0.04),
-                          // Countdown Timer Card
-                          CountdownCard(
-                            colorScheme: colorScheme,
-                            responsiveSizes: responsiveSizes,
-                            totalSecondsNotifier: _totalSecondsNotifier,
-                            isExpiredNotifier: _isExpiredNotifier,
-                          ),
-                          SizedBox(height: screenHeight * 0.04),
-                        ],
+                            // Bargain Card - Only show if bargain section is visible and has valid bargain
+                            bid.bargainAmount != null
+                                ? BargainCard(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    bargainAmount: bid.bargainAmount,
+                                    isExpiredNotifier: _isExpiredNotifier,
+                                    onAccept: () {
+                                      if (bid.bargainAmount != null) {
+                                        _biddingStatusHelper
+                                            .handleAcceptBargain(
+                                              bid.bargainAmount!,
+                                            );
+                                      }
+                                    },
+                                    onReject: () {
+                                      _biddingStatusHelper
+                                          .handleRejectBargain();
+                                    },
+                                  )
+                                : const SizedBox.shrink(),
+                            SizedBox(height: screenHeight * 0.04),
+                            // Countdown Timer Card
+                            CountdownCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              totalSecondsNotifier: _totalSecondsNotifier,
+                              isExpiredNotifier: _isExpiredNotifier,
+                            ),
+                            SizedBox(height: screenHeight * 0.04),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-          };
-        },
+            };
+          },
+        ),
       ),
     );
   }

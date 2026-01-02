@@ -2,9 +2,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
 
 class BiddingStatusHelper {
   final BuildContext context;
+  final String requestId;
   final String bidId;
   late final Timer? _timer;
   final ValueNotifier<int> totalSecondsNotifier;
@@ -14,6 +17,7 @@ class BiddingStatusHelper {
 
   BiddingStatusHelper({
     required this.context,
+    required this.requestId,
     required this.bidId,
     required this.totalSecondsNotifier,
     required this.isExpiredNotifier,
@@ -51,9 +55,21 @@ class BiddingStatusHelper {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  void handleAcceptBargain() {}
+  void handleAcceptBargain(double bargainAmount) {
+    final BargainActionBloc bloc = context.read<BargainActionBloc>();
+    bloc.add(
+      BargainActionEvent.acceptBargain(
+        requestId: requestId,
+        bidId: bidId,
+        bargainAmount: bargainAmount,
+      ),
+    );
+  }
 
-  void handleRejectBargain() {}
-
-  void simulateServerBargain(double amount) {}
+  void handleRejectBargain() {
+    final BargainActionBloc bloc = context.read<BargainActionBloc>();
+    bloc.add(
+      BargainActionEvent.rejectBargain(requestId: requestId, bidId: bidId),
+    );
+  }
 }

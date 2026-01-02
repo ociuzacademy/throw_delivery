@@ -123,11 +123,11 @@ class DeliveryRequestRepository {
   }
 
   // Accept Bargain
-  Future<void> acceptBargain(
-    String requestId,
-    String bidId,
-    double bargainAmount,
-  ) async {
+  Future<void> acceptBargain({
+    required String requestId,
+    required String bidId,
+    required double bargainAmount,
+  }) async {
     try {
       final Map<String, dynamic> bidData = {
         'bargainAmount': null,
@@ -148,7 +148,10 @@ class DeliveryRequestRepository {
   }
 
   // Reject Bargain
-  Future<void> rejectBargain(String requestId, String bidId) async {
+  Future<void> rejectBargain({
+    required String requestId,
+    required String bidId,
+  }) async {
     try {
       final Map<String, dynamic> bidData = {
         'bargainAmount': null,
