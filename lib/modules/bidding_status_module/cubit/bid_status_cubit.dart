@@ -20,10 +20,12 @@ class BidStatusCubit extends Cubit<BidStatusState> {
     emit(const BidStatusState.loading());
     try {
       _subscription?.cancel();
-      final deliveryRequest = await _repository.getDeliveryRequestById(
-        requestId,
-      );
-      _subscription = _repository.getBidDetails(requestId, bidId).listen((bid) {
+      _subscription = _repository.getBidDetails(requestId, bidId).listen((
+        bid,
+      ) async {
+        final deliveryRequest = await _repository.getDeliveryRequestById(
+          requestId,
+        );
         emit(
           BidStatusState.success(bid: bid, deliveryRequest: deliveryRequest),
         );

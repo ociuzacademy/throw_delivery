@@ -96,6 +96,27 @@ class DeliveryRequestRepository {
 
       final DeliveryAgentModel agent = DeliveryAgentModel.fromJson(doc.data()!);
 
+      final requestDoc = await _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .get();
+
+      final DeliveryRequestModel requestData = DeliveryRequestModel.fromJson(
+        requestDoc.data()!,
+      );
+
+      if (requestData.minimumDeliveryCharge > bidAmount) {
+        final Map<String, dynamic> requestDataUpdate = {
+          'minimumDeliveryCharge': bidAmount,
+          'updatedAt': FieldValue.serverTimestamp(),
+        };
+
+        await _firestore
+            .collection(deliveryRequestCollection)
+            .doc(requestId)
+            .update(requestDataUpdate);
+      }
+
       final Map<String, dynamic> bidData = {
         'agentId': agentId,
         'agentName': agent.displayName,
@@ -129,6 +150,27 @@ class DeliveryRequestRepository {
     required double bargainAmount,
   }) async {
     try {
+      final requestDoc = await _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .get();
+
+      final DeliveryRequestModel requestData = DeliveryRequestModel.fromJson(
+        requestDoc.data()!,
+      );
+
+      if (requestData.minimumDeliveryCharge > bargainAmount) {
+        final Map<String, dynamic> requestDataUpdate = {
+          'minimumDeliveryCharge': bargainAmount,
+          'updatedAt': FieldValue.serverTimestamp(),
+        };
+
+        await _firestore
+            .collection(deliveryRequestCollection)
+            .doc(requestId)
+            .update(requestDataUpdate);
+      }
+
       final Map<String, dynamic> bidData = {
         'bargainAmount': null,
         'bidAmount': bargainAmount,
