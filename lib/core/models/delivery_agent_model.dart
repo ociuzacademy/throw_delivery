@@ -30,7 +30,7 @@ class DeliveryAgentModel {
   final double averageRating;
   final int numberOfRatings;
 
-  DeliveryAgentModel({
+  const DeliveryAgentModel({
     required this.uid,
     required this.displayName,
     required this.email,
