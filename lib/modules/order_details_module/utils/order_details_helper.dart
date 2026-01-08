@@ -29,6 +29,7 @@ class OrderDetailsHelper {
       builder: (context) => OTPBottomSheet(
         colorScheme: colorScheme,
         responsiveSizes: responsiveSizes,
+        requestId: orderId,
       ),
     );
   }

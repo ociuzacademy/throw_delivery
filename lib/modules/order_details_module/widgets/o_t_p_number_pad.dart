@@ -71,7 +71,7 @@ class OTPNumberPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             OTPActionButton(
-              label: 'CLEAR',
+              label: 'CLR',
               icon: Icons.clear,
               onPressed: clearOtp,
               colorScheme: colorScheme,

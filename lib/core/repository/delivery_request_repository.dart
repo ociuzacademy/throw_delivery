@@ -256,4 +256,49 @@ class DeliveryRequestRepository {
       );
     }
   }
+
+  // Complete delivery by entering the OTP
+  Future<void> completeDeliveryByEnteringOtp({
+    required String requestId,
+    required String otp,
+  }) async {
+    try {
+      // 1. Fetch the current delivery request details
+      final requestDoc = await _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .get();
+
+      final DeliveryRequestModel requestData = DeliveryRequestModel.fromJson(
+        requestDoc.data()!,
+      );
+
+      debugPrint('Order OTP: ${requestData.otp.toString()}');
+      debugPrint('User OTP: $otp');
+
+      // 2. Check if the OTP is correct
+      if (requestData.otp != null && requestData.otp != otp) {
+        throw OTPVerificationException();
+      }
+
+      // 3. Update the delivery request details
+      final Map<String, dynamic> requestDataUpdate = {
+        'deliveryStatus': DeliveryStatus.dropOff.value,
+        'paymentStatus': PaymentStatus.escrowAmountReleased.value,
+        'requestStatus': RequestStatus.requestCompleted.value,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      await _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .update(requestDataUpdate);
+    } on OTPVerificationException {
+      rethrow;
+    } catch (e) {
+      debugPrint('Error completing delivery by entering OTP: $e');
+      throw DeliveryRequestRepositoryException(
+        'Error completing delivery by entering OTP: $e',
+      );
+    }
+  }
 }

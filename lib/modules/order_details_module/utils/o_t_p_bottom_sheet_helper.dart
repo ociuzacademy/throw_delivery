@@ -1,14 +1,19 @@
 // o_t_p_bottom_sheet_helper.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
 
 class OTPBottomSheetHelper {
   final BuildContext context;
+  final String requestId;
   final List<TextEditingController> otpControllers;
   final List<FocusNode> otpFocusNodes;
   final ValueNotifier<List<String>> enteredOtp;
 
   OTPBottomSheetHelper({
     required this.context,
+    required this.requestId,
     required this.otpControllers,
     required this.otpFocusNodes,
     required this.enteredOtp,
@@ -29,23 +34,17 @@ class OTPBottomSheetHelper {
     String otp = otpControllers.map((controller) => controller.text).join();
     if (otp.length == 4) {
       // Handle OTP verification logic here
-      debugPrint('Verifying OTP: $otp');
       Navigator.of(context).pop(); // Close the bottom sheet
 
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('OTP verified successfully!'),
-          backgroundColor: Colors.green,
-        ),
+      final CompleteDeliveryBloc bloc = context.read<CompleteDeliveryBloc>();
+      bloc.add(
+        CompleteDeliveryEvent.verifyingOtp(requestId: requestId, otp: otp),
       );
     } else {
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid 4-digit OTP'),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackbar.showError(
+        context: context,
+        message: 'Please enter a valid 4-digit OTP',
       );
     }
   }

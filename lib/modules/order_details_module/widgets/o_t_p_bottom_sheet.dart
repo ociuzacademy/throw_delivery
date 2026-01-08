@@ -9,11 +9,13 @@ import 'package:throw_delivery/modules/order_details_module/widgets/o_t_p_number
 class OTPBottomSheet extends StatefulWidget {
   final OrderDetailsColorScheme colorScheme;
   final OrderDetailsResponsiveSizes responsiveSizes;
+  final String requestId;
 
   const OTPBottomSheet({
     super.key,
     required this.colorScheme,
     required this.responsiveSizes,
+    required this.requestId,
   });
 
   @override
@@ -42,6 +44,7 @@ class _OTPBottomSheetState extends State<OTPBottomSheet> {
     super.initState();
     _otpBottomSheetHelper = OTPBottomSheetHelper(
       context: context,
+      requestId: widget.requestId,
       otpControllers: _otpControllers,
       otpFocusNodes: _otpFocusNodes,
       enteredOtp: _enteredOtp,
