@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
+import 'package:throw_delivery/core/widgets/loaders/custom_loader_widget.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_color_scheme.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_responsive_sizes.dart';
 import 'package:throw_delivery/modules/order_details_module/utils/order_details_helper.dart';
@@ -9,10 +13,11 @@ import 'package:throw_delivery/modules/order_details_module/widgets/package_paym
 import 'package:throw_delivery/modules/order_details_module/widgets/tracking_card.dart';
 
 class OrderDetailsPage extends StatefulWidget {
-  const OrderDetailsPage({super.key});
+  final String orderId;
+  const OrderDetailsPage({super.key, required this.orderId});
 
-  static MaterialPageRoute route() =>
-      MaterialPageRoute(builder: (_) => const OrderDetailsPage());
+  static MaterialPageRoute route({required String orderId}) =>
+      MaterialPageRoute(builder: (_) => OrderDetailsPage(orderId: orderId));
 
   @override
   State<OrderDetailsPage> createState() => _OrderDetailsPageState();
@@ -24,7 +29,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _orderDetailsHelper = OrderDetailsHelper(context: context);
+    _orderDetailsHelper = OrderDetailsHelper(
+      context: context,
+      orderId: widget.orderId,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _orderDetailsHelper.getDeliveryRequestDetails();
+    });
   }
 
   @override
@@ -58,95 +69,155 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SafeArea(
-        child: Container(
-          color: colorScheme.backgroundColor,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-                  child: Column(
-                    children: [
-                      SizedBox(height: responsiveSizes.mediumSpacing),
-
-                      // Order Info Card
-                      OrderInfoCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                      ),
-                      SizedBox(height: responsiveSizes.mediumSpacing),
-
-                      // Package & Payment Card
-                      PackagePaymentCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                      ),
-                      SizedBox(height: responsiveSizes.mediumSpacing),
-
-                      // Customer Contact Card
-                      CustomerContactCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                      ),
-                      SizedBox(height: responsiveSizes.mediumSpacing),
-
-                      // Tracking Card
-                      TrackingCard(
-                        colorScheme: colorScheme,
-                        responsiveSizes: responsiveSizes,
-                      ),
-                      SizedBox(height: responsiveSizes.largeSpacing),
-                    ],
-                  ),
+      body:
+          BlocBuilder<DeliveryRequestDetailsCubit, DeliveryRequestDetailsState>(
+            builder: (context, state) {
+              return switch (state) {
+                DeliveryRequestDetailsInitial() => const SizedBox.shrink(),
+                DeliveryRequestDetailsLoading() => const CustomLoaderWidget(
+                  message: 'Loading delivery request details...',
                 ),
-              ),
+                DeliveryRequestDetailsError(:final message) =>
+                  CustomErrorWidget(
+                    errorMessage: message,
+                    isDark: isDark,
+                    onRetry: _orderDetailsHelper.getDeliveryRequestDetails,
+                  ),
+                DeliveryRequestDetailsSuccess(:final deliveryRequest) =>
+                  SafeArea(
+                    child: Container(
+                      color: colorScheme.backgroundColor,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.all(
+                                responsiveSizes.horizontalPadding,
+                              ),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: responsiveSizes.mediumSpacing,
+                                  ),
 
-              // Footer Button
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(responsiveSizes.horizontalPadding),
-                decoration: BoxDecoration(
-                  color: colorScheme.secondaryColor.withValues(alpha: 0.8),
-                  border: Border(
-                    top: BorderSide(color: colorScheme.dividerColor, width: 1),
+                                  // Order Info Card
+                                  OrderInfoCard(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    orderId: widget.orderId,
+                                    pickupDate: deliveryRequest.pickupDate,
+                                    pickupAddress:
+                                        deliveryRequest.pickupAddress,
+                                    dropoffDate: deliveryRequest.dropOffDate,
+                                    preferedDeliveryTime:
+                                        deliveryRequest.preferredDeliveryTime,
+                                    dropoffAddress:
+                                        deliveryRequest.dropOffAddress,
+                                  ),
+                                  SizedBox(
+                                    height: responsiveSizes.mediumSpacing,
+                                  ),
+
+                                  // Package & Payment Card
+                                  PackagePaymentCard(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    packageType: deliveryRequest.packageType,
+                                    weight: deliveryRequest.packageWeight,
+                                    deliveryFee:
+                                        deliveryRequest.agreedDeliveryCharge ??
+                                        0.0,
+                                    paymentStatus:
+                                        deliveryRequest.paymentStatus,
+                                  ),
+                                  SizedBox(
+                                    height: responsiveSizes.mediumSpacing,
+                                  ),
+
+                                  // Customer Contact Card
+                                  CustomerContactCard(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    customerName: deliveryRequest.customerName,
+                                    customerPhone:
+                                        deliveryRequest.pickupPhoneNumber,
+                                    customerImage:
+                                        deliveryRequest.customerAvatarUrl,
+                                  ),
+                                  SizedBox(
+                                    height: responsiveSizes.mediumSpacing,
+                                  ),
+
+                                  // Tracking Card
+                                  TrackingCard(
+                                    colorScheme: colorScheme,
+                                    responsiveSizes: responsiveSizes,
+                                    deliveryStatus:
+                                        deliveryRequest.deliveryStatus,
+                                  ),
+                                  SizedBox(
+                                    height: responsiveSizes.largeSpacing,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Footer Button
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(
+                              responsiveSizes.horizontalPadding,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorScheme.secondaryColor.withValues(
+                                alpha: 0.8,
+                              ),
+                              border: Border(
+                                top: BorderSide(
+                                  color: colorScheme.dividerColor,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _orderDetailsHelper.showOtpBottomSheet(
+                                  colorScheme,
+                                  responsiveSizes,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorScheme.primaryColor,
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      responsiveSizes.buttonVerticalPadding,
+                                  horizontal: 24,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 4,
+                                shadowColor: colorScheme.primaryColor
+                                    .withValues(alpha: 0.3),
+                              ),
+                              child: Text(
+                                'Complete Delivery',
+                                style: GoogleFonts.inter(
+                                  fontSize: responsiveSizes.bodyFontSize,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _orderDetailsHelper.showOtpBottomSheet(
-                      colorScheme,
-                      responsiveSizes,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      vertical: responsiveSizes.buttonVerticalPadding,
-                      horizontal: 24,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 4,
-                    shadowColor: colorScheme.primaryColor.withValues(
-                      alpha: 0.3,
-                    ),
-                  ),
-                  child: Text(
-                    'Complete Delivery',
-                    style: GoogleFonts.inter(
-                      fontSize: responsiveSizes.bodyFontSize,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              };
+            },
           ),
-        ),
-      ),
     );
   }
 }

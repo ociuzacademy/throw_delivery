@@ -1,20 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_color_scheme.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_responsive_sizes.dart';
 
 class OrderInfoCard extends StatelessWidget {
   final OrderDetailsColorScheme colorScheme;
   final OrderDetailsResponsiveSizes responsiveSizes;
+  final String orderId;
+  final Timestamp pickupDate;
+  final String pickupAddress;
+  final Timestamp dropoffDate;
+  final PreferedDeliveryTime preferedDeliveryTime;
+  final String dropoffAddress;
 
   const OrderInfoCard({
     super.key,
     required this.colorScheme,
     required this.responsiveSizes,
+    required this.orderId,
+    required this.pickupDate,
+    required this.dropoffDate,
+    required this.pickupAddress,
+    required this.dropoffAddress,
+    required this.preferedDeliveryTime,
   });
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+    final DateFormat timeFormat = DateFormat('hh:mm a');
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(responsiveSizes.cardPadding),
@@ -37,14 +54,14 @@ class OrderInfoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Order ID: #IND123456',
+                'Order ID: #$orderId',
                 style: GoogleFonts.inter(
                   fontSize: responsiveSizes.smallFontSize,
                   color: colorScheme.textSecondaryColor,
                 ),
               ),
               Text(
-                '24/05/2024',
+                dateFormat.format(pickupDate.toDate()),
                 style: GoogleFonts.inter(
                   fontSize: responsiveSizes.smallFontSize,
                   color: colorScheme.textSecondaryColor,
@@ -71,7 +88,7 @@ class OrderInfoCard extends StatelessWidget {
                   ),
                   Container(
                     width: 1,
-                    height: 40,
+                    height: 65,
                     color: colorScheme.dividerColor,
                     margin: const EdgeInsets.symmetric(vertical: 2),
                   ),
@@ -100,7 +117,7 @@ class OrderInfoCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Pickup: A-42, Connaught Place, New Delhi',
+                          'Pickup: $pickupAddress',
                           style: GoogleFonts.inter(
                             fontSize: responsiveSizes.bodyFontSize,
                             fontWeight: FontWeight.w600,
@@ -109,7 +126,7 @@ class OrderInfoCard extends StatelessWidget {
                         ),
                         SizedBox(height: responsiveSizes.smallSpacing),
                         Text(
-                          '10:00 AM - 10:15 AM',
+                          timeFormat.format(pickupDate.toDate()),
                           style: GoogleFonts.inter(
                             fontSize: responsiveSizes.smallFontSize,
                             color: colorScheme.textSecondaryColor,
@@ -124,7 +141,7 @@ class OrderInfoCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Dropoff: B-11, Sector 18, Noida',
+                          'Dropoff: $dropoffAddress',
                           style: GoogleFonts.inter(
                             fontSize: responsiveSizes.bodyFontSize,
                             fontWeight: FontWeight.w600,
@@ -133,7 +150,7 @@ class OrderInfoCard extends StatelessWidget {
                         ),
                         SizedBox(height: responsiveSizes.smallSpacing),
                         Text(
-                          '11:00 AM - 11:15 AM',
+                          '${timeFormat.format(dropoffDate.toDate())} ${preferedDeliveryTime.value}',
                           style: GoogleFonts.inter(
                             fontSize: responsiveSizes.smallFontSize,
                             color: colorScheme.textSecondaryColor,

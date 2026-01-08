@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:throw_delivery/modules/home_module/enums/delivery_status.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/home_module/helpers/completed_deliveries_color_scheme.dart';
 import 'package:throw_delivery/modules/home_module/helpers/completed_deliveries_responsive_sizes.dart';
 import 'package:throw_delivery/modules/home_module/utils/delivery_card_helper.dart';

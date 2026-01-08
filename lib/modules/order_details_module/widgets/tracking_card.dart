@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_color_scheme.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_responsive_sizes.dart';
 import 'package:throw_delivery/modules/order_details_module/widgets/timeline_item.dart';
@@ -7,11 +8,13 @@ import 'package:throw_delivery/modules/order_details_module/widgets/timeline_ite
 class TrackingCard extends StatelessWidget {
   final OrderDetailsColorScheme colorScheme;
   final OrderDetailsResponsiveSizes responsiveSizes;
+  final DeliveryStatus deliveryStatus;
 
   const TrackingCard({
     super.key,
     required this.colorScheme,
     required this.responsiveSizes,
+    required this.deliveryStatus,
   });
 
   @override
@@ -55,7 +58,7 @@ class TrackingCard extends StatelessWidget {
                 title: 'Order Accepted',
                 description: 'You have accepted the delivery request.',
                 titleColor: colorScheme.primaryColor,
-                showLine: true,
+                showLine: deliveryStatus == DeliveryStatus.pending,
                 lineColor: colorScheme.primaryColor,
               ),
 
@@ -68,7 +71,7 @@ class TrackingCard extends StatelessWidget {
                 title: 'Out for Delivery',
                 description: 'You are on the way to the dropoff location.',
                 titleColor: colorScheme.successColor,
-                showLine: true,
+                showLine: deliveryStatus == DeliveryStatus.onTheWay,
                 lineColor: colorScheme.successColor,
               ),
 
@@ -81,7 +84,8 @@ class TrackingCard extends StatelessWidget {
                 title: 'Delivered',
                 description: 'Waiting for delivery completion.',
                 titleColor: colorScheme.textSecondaryColor,
-                showLine: false,
+                showLine: deliveryStatus == DeliveryStatus.dropOff,
+                lineColor: colorScheme.textSecondaryColor,
               ),
             ],
           ),

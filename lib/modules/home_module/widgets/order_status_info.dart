@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:throw_delivery/modules/home_module/enums/delivery_status.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/home_module/helpers/completed_deliveries_color_scheme.dart';
 import 'package:throw_delivery/modules/home_module/helpers/completed_deliveries_responsive_sizes.dart';
 
@@ -22,7 +22,7 @@ class OrderStatusInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (status) {
-      case DeliveryStatus.pickup:
+      case DeliveryStatus.pending:
         return Row(
           children: [
             Icon(
@@ -32,7 +32,7 @@ class OrderStatusInfo extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              'Ready for pickup',
+              'Pending',
               style: GoogleFonts.poppins(
                 fontSize: responsiveSizes.smallFontSize,
                 color: colorScheme.textSecondaryColor,
@@ -40,7 +40,7 @@ class OrderStatusInfo extends StatelessWidget {
             ),
           ],
         );
-      case DeliveryStatus.ongoing:
+      case DeliveryStatus.onTheWay:
         return Row(
           children: [
             Icon(
@@ -58,7 +58,7 @@ class OrderStatusInfo extends StatelessWidget {
             ),
           ],
         );
-      case DeliveryStatus.canceled:
+      case DeliveryStatus.dropOff:
         return Row(
           children: [
             Icon(
@@ -68,7 +68,7 @@ class OrderStatusInfo extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              'Delivery canceled',
+              'Drop Off',
               style: GoogleFonts.poppins(
                 fontSize: responsiveSizes.smallFontSize,
                 color: colorScheme.textSecondaryColor,
@@ -76,8 +76,6 @@ class OrderStatusInfo extends StatelessWidget {
             ),
           ],
         );
-      default:
-        return const SizedBox.shrink();
     }
   }
 }

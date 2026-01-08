@@ -211,4 +211,49 @@ class DeliveryRequestRepository {
       throw DeliveryRequestRepositoryException('Error rejecting bargain: $e');
     }
   }
+
+  // Fetch the list of delivery request of a delivery agent
+  Future<List<DeliveryRequestModel>> getDeliveryRequestOfDeliveryAgent(
+    String agentId,
+  ) async {
+    try {
+      final doc = await _firestore
+          .collection(deliveryRequestCollection)
+          .where('deliveryAgentId', isEqualTo: agentId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      debugPrint(doc.docs.toString());
+
+      return doc.docs
+          .map((doc) => DeliveryRequestModel.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      debugPrint('Error getting delivery request of delivery agent: $e');
+      throw DeliveryRequestRepositoryException(
+        'Error getting delivery request of delivery agent: $e',
+      );
+    }
+  }
+
+  // Fetch the details of a single delivery request
+  Future<DeliveryRequestModel> getDeliveryRequestDetails(
+    String requestId,
+  ) async {
+    try {
+      final doc = await _firestore
+          .collection(deliveryRequestCollection)
+          .doc(requestId)
+          .get();
+
+      debugPrint(doc.data().toString());
+
+      return DeliveryRequestModel.fromJson(doc.data()!);
+    } catch (e) {
+      debugPrint('Error getting delivery request details by id $requestId: $e');
+      throw DeliveryRequestRepositoryException(
+        'Error getting delivery request details by id $requestId: $e',
+      );
+    }
+  }
 }

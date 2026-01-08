@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:throw_delivery/modules/home_module/enums/delivery_status.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/home_module/helpers/completed_deliveries_color_scheme.dart';
 import 'package:throw_delivery/modules/home_module/models/status_config.dart';
 
@@ -9,14 +9,12 @@ class DeliveryCardHelper {
     CompletedDeliveriesColorScheme colorScheme,
   ) {
     switch (status) {
-      case DeliveryStatus.completed:
+      case DeliveryStatus.dropOff:
         return colorScheme.primaryColor;
-      case DeliveryStatus.canceled:
+      case DeliveryStatus.pending:
         return colorScheme.dangerColor;
-      case DeliveryStatus.pickup:
+      case DeliveryStatus.onTheWay:
         return colorScheme.infoColor;
-      case DeliveryStatus.ongoing:
-        return colorScheme.warningColor;
     }
   }
 
@@ -25,14 +23,12 @@ class DeliveryCardHelper {
     CompletedDeliveriesColorScheme colorScheme,
   ) {
     switch (status) {
-      case DeliveryStatus.pickup:
-        return StatusConfig('Pickup', colorScheme.infoColor);
-      case DeliveryStatus.ongoing:
-        return StatusConfig('Ongoing', colorScheme.warningColor);
-      case DeliveryStatus.completed:
-        return StatusConfig('Completed', colorScheme.successColor);
-      case DeliveryStatus.canceled:
-        return StatusConfig('Canceled', colorScheme.dangerColor);
+      case DeliveryStatus.onTheWay:
+        return StatusConfig('On The Way', colorScheme.infoColor);
+      case DeliveryStatus.pending:
+        return StatusConfig('Pending', colorScheme.warningColor);
+      case DeliveryStatus.dropOff:
+        return StatusConfig('Drop Off', colorScheme.successColor);
     }
   }
 }

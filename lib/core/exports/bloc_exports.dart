@@ -6,3 +6,5 @@ export 'package:throw_delivery/core/cubit/delivery_request/delivery_request_cubi
 export 'package:throw_delivery/modules/home_module/cubit/active_delivery_list/active_delivery_list_cubit.dart';
 export 'package:throw_delivery/modules/place_bid_module/bloc/place_bid_bloc.dart';
 export 'package:throw_delivery/modules/bidding_status_module/bloc/bargain_action_bloc.dart';
+export 'package:throw_delivery/modules/home_module/cubit/agent_delivery_list/agent_delivery_list_cubit.dart';
+export 'package:throw_delivery/modules/order_details_module/cubit/delivery_request_details_cubit.dart';

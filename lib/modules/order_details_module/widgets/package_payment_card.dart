@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_color_scheme.dart';
 import 'package:throw_delivery/modules/order_details_module/helper/order_details_responsive_sizes.dart';
 import 'package:throw_delivery/modules/order_details_module/widgets/info_row.dart';
@@ -7,11 +8,19 @@ import 'package:throw_delivery/modules/order_details_module/widgets/info_row.dar
 class PackagePaymentCard extends StatelessWidget {
   final OrderDetailsColorScheme colorScheme;
   final OrderDetailsResponsiveSizes responsiveSizes;
+  final PackageType packageType;
+  final double weight;
+  final double deliveryFee;
+  final PaymentStatus paymentStatus;
 
   const PackagePaymentCard({
     super.key,
     required this.colorScheme,
     required this.responsiveSizes,
+    required this.packageType,
+    required this.weight,
+    required this.deliveryFee,
+    required this.paymentStatus,
   });
 
   @override
@@ -34,6 +43,7 @@ class PackagePaymentCard extends StatelessWidget {
         children: [
           // Header
           Container(
+            width: double.infinity,
             padding: EdgeInsets.all(responsiveSizes.cardPadding),
             decoration: BoxDecoration(
               border: Border(
@@ -57,21 +67,21 @@ class PackagePaymentCard extends StatelessWidget {
               children: [
                 InfoRow(
                   label: 'Item',
-                  value: 'Documents',
+                  value: packageType.value,
                   colorScheme: colorScheme,
                   responsiveSizes: responsiveSizes,
                 ),
                 SizedBox(height: responsiveSizes.mediumSpacing),
                 InfoRow(
                   label: 'Weight',
-                  value: '0.5 kg',
+                  value: '$weight kg',
                   colorScheme: colorScheme,
                   responsiveSizes: responsiveSizes,
                 ),
                 SizedBox(height: responsiveSizes.mediumSpacing),
                 InfoRow(
                   label: 'Delivery Fee',
-                  value: '₹250.00',
+                  value: '₹$deliveryFee',
                   colorScheme: colorScheme,
                   responsiveSizes: responsiveSizes,
                 ),
@@ -87,7 +97,7 @@ class PackagePaymentCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Paid (Escrow)',
+                      paymentStatus.value,
                       style: GoogleFonts.inter(
                         fontSize: responsiveSizes.bodyFontSize,
                         fontWeight: FontWeight.w600,
