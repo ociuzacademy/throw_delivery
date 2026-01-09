@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/exports/enum_exports.dart';
 import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
 import 'package:throw_delivery/core/widgets/loaders/custom_loader_widget.dart';
 import 'package:throw_delivery/core/widgets/loaders/overlay_loader.dart';
@@ -199,53 +200,59 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             ),
 
                             // Footer Button
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(
-                                responsiveSizes.horizontalPadding,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.secondaryColor.withValues(
-                                  alpha: 0.8,
-                                ),
-                                border: Border(
-                                  top: BorderSide(
-                                    color: colorScheme.dividerColor,
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _orderDetailsHelper.showOtpBottomSheet(
-                                    colorScheme,
-                                    responsiveSizes,
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colorScheme.primaryColor,
-                                  foregroundColor: Colors.white,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        responsiveSizes.buttonVerticalPadding,
-                                    horizontal: 24,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 4,
-                                  shadowColor: colorScheme.primaryColor
-                                      .withValues(alpha: 0.3),
-                                ),
-                                child: Text(
-                                  'Complete Delivery',
-                                  style: GoogleFonts.inter(
-                                    fontSize: responsiveSizes.bodyFontSize,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            deliveryRequest.deliveryStatus ==
+                                    DeliveryStatus.onTheWay
+                                ? Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(
+                                      responsiveSizes.horizontalPadding,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.secondaryColor
+                                          .withValues(alpha: 0.8),
+                                      border: Border(
+                                        top: BorderSide(
+                                          color: colorScheme.dividerColor,
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        _orderDetailsHelper.showOtpBottomSheet(
+                                          colorScheme,
+                                          responsiveSizes,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            colorScheme.primaryColor,
+                                        foregroundColor: Colors.white,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: responsiveSizes
+                                              .buttonVerticalPadding,
+                                          horizontal: 24,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        elevation: 4,
+                                        shadowColor: colorScheme.primaryColor
+                                            .withValues(alpha: 0.3),
+                                      ),
+                                      child: Text(
+                                        'Complete Delivery',
+                                        style: GoogleFonts.inter(
+                                          fontSize:
+                                              responsiveSizes.bodyFontSize,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                           ],
                         ),
                       ),
