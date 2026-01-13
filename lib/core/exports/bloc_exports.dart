@@ -9,3 +9,4 @@ export 'package:throw_delivery/modules/bidding_status_module/bloc/bargain_action
 export 'package:throw_delivery/modules/home_module/cubit/agent_delivery_list/agent_delivery_list_cubit.dart';
 export 'package:throw_delivery/modules/order_details_module/cubit/delivery_request_details_cubit.dart';
 export 'package:throw_delivery/modules/order_details_module/bloc/complete_delivery_bloc.dart';
+export 'package:throw_delivery/modules/feedbacks_module/cubit/feedbacks_cubit.dart';

@@ -28,10 +28,12 @@ class MyApp extends StatelessWidget {
         DeliveryAgentRepository();
     final DeliveryRequestRepository deliveryRequestRepository =
         DeliveryRequestRepository();
+    final FeedbackRepository feedbackRepository = FeedbackRepository();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: deliveryAgentRepository),
         RepositoryProvider.value(value: deliveryRequestRepository),
+        RepositoryProvider.value(value: feedbackRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -87,6 +89,10 @@ class MyApp extends StatelessWidget {
             create: (context) => CompleteDeliveryBloc(
               deliveryRequestRepository: deliveryRequestRepository,
             ),
+          ),
+          BlocProvider(
+            create: (context) =>
+                FeedbacksCubit(feedbackRepository: feedbackRepository),
           ),
         ],
         child: MaterialApp(

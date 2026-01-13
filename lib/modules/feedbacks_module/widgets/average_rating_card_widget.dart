@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/theme/app_colors.dart';
+import 'package:throw_delivery/modules/feedbacks_module/widgets/star_rating_widget.dart';
 
 class AverageRatingCard extends StatelessWidget {
   final double rating;
@@ -48,7 +49,7 @@ class AverageRatingCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                _buildStarRating(rating),
+                StarRatingWidget(rating: rating),
               ],
             ),
             const SizedBox(height: 4),
@@ -64,23 +65,6 @@ class AverageRatingCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStarRating(double rating) {
-    int fullStars = rating.floor();
-    bool hasHalfStar = (rating - fullStars) >= 0.5;
-
-    return Row(
-      children: List.generate(5, (index) {
-        if (index < fullStars) {
-          return const Icon(Icons.star, color: AppColors.yellow, size: 28);
-        } else if (index == fullStars && hasHalfStar) {
-          return const Icon(Icons.star_half, color: AppColors.yellow, size: 28);
-        } else {
-          return Icon(Icons.star, color: Colors.grey.shade300, size: 28);
-        }
-      }),
     );
   }
 }
