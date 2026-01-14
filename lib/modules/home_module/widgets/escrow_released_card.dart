@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:throw_delivery/modules/home_module/widgets/amount_row.dart';
 
 class EscrowReleasedCard extends StatelessWidget {
   final Color cardColor;
@@ -7,6 +8,8 @@ class EscrowReleasedCard extends StatelessWidget {
   final Color accentColor;
   final Color successColor;
   final Color primaryColor;
+  final double amountInEscrow;
+  final double amountReleased;
 
   const EscrowReleasedCard({
     super.key,
@@ -16,6 +19,8 @@ class EscrowReleasedCard extends StatelessWidget {
     required this.accentColor,
     required this.successColor,
     required this.primaryColor,
+    required this.amountInEscrow, // = 550.00,
+    required this.amountReleased, // = 1900.75,
   });
 
   @override
@@ -37,11 +42,11 @@ class EscrowReleasedCard extends StatelessWidget {
       child: Column(
         children: [
           // In Escrow Row
-          _AmountRow(
+          AmountRow(
             icon: Icons.security,
             iconColor: primaryColor,
             title: 'In Escrow',
-            amount: '₹550.00',
+            amount: '₹${amountInEscrow.toStringAsFixed(2)}',
             amountColor: textPrimaryColor,
             textPrimaryColor: textPrimaryColor,
             textSecondaryColor: textSecondaryColor,
@@ -55,65 +60,17 @@ class EscrowReleasedCard extends StatelessWidget {
           ),
 
           // Released Row
-          _AmountRow(
+          AmountRow(
             icon: Icons.verified,
             iconColor: successColor,
             title: 'Released',
-            amount: '₹1,900.75',
+            amount: '₹${amountReleased.toStringAsFixed(2)}',
             amountColor: successColor,
             textPrimaryColor: textPrimaryColor,
             textSecondaryColor: textSecondaryColor,
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AmountRow extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String amount;
-  final Color amountColor;
-  final Color textPrimaryColor;
-  final Color textSecondaryColor;
-
-  const _AmountRow({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.amount,
-    required this.amountColor,
-    required this.textPrimaryColor,
-    required this.textSecondaryColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 14, color: textSecondaryColor),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              amount,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: amountColor,
-              ),
-            ),
-          ],
-        ),
-        Icon(icon, color: iconColor, size: 32),
-      ],
     );
   }
 }

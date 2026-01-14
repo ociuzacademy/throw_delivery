@@ -26,7 +26,11 @@ class AgentDeliveryListCubit extends Cubit<AgentDeliveryListState> {
 
       final deliveryRequests = await _deliveryRequestRepository
           .getDeliveryRequestOfDeliveryAgent(agentId);
-      emit(AgentDeliveryListState.loaded(deliveryRequests));
+      if (deliveryRequests.isEmpty) {
+        emit(const AgentDeliveryListState.empty());
+      } else {
+        emit(AgentDeliveryListState.loaded(deliveryRequests));
+      }
     } catch (e) {
       emit(AgentDeliveryListState.error(e.toString()));
     }

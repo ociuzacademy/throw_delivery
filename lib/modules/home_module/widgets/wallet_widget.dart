@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/custom_empty_widget.dart';
+import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
+import 'package:throw_delivery/core/widgets/loaders/custom_loader_widget.dart';
+import 'package:throw_delivery/modules/home_module/utils/wallet_widget_helper.dart';
 import 'package:throw_delivery/modules/home_module/widgets/earnings_stats_grid.dart';
 import 'package:throw_delivery/modules/home_module/widgets/escrow_released_card.dart';
 import 'package:throw_delivery/modules/home_module/widgets/recent_earnings_list.dart';
-import 'package:throw_delivery/modules/home_module/widgets/withdraw_button.dart';
 
-class WalletWidget extends StatelessWidget {
+class WalletWidget extends StatefulWidget {
   const WalletWidget({super.key});
+
+  @override
+  State<WalletWidget> createState() => _WalletWidgetState();
+}
+
+class _WalletWidgetState extends State<WalletWidget> {
+  late final WalletWidgetHelper _helper;
+
+  @override
+  void initState() {
+    super.initState();
+    _helper = WalletWidgetHelper(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _helper.getAgentDeliveryList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,58 +62,91 @@ class WalletWidget extends StatelessWidget {
     final _ = isVerySmallScreen ? 20.0 : 24.0;
     final _ = isVerySmallScreen ? 24.0 : 32.0;
 
-    return Column(
-      children: [
-        // Main Content
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(horizontalPadding),
-            child: Column(
-              children: [
-                SizedBox(height: mediumSpacing),
+    return BlocBuilder<AgentDeliveryListCubit, AgentDeliveryListState>(
+      builder: (context, state) {
+        return switch (state) {
+          AgentDeliveryListLoading() => const CustomLoaderWidget(
+            message: 'Loading wallet data...',
+          ),
+          AgentDeliveryListEmpty() => CustomEmptyWidget(
+            message: 'Wallet data unavailable.',
+            isDark: isDark,
+          ),
+          AgentDeliveryListError(:final message) => CustomErrorWidget(
+            errorMessage: message,
+            isDark: isDark,
+            onRetry: _helper.getAgentDeliveryList,
+          ),
+          AgentDeliveryListLoaded(:final deliveryRequests) => Column(
+            children: [
+              // Main Content
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(horizontalPadding),
+                  child: Column(
+                    children: [
+                      SizedBox(height: mediumSpacing),
 
-                // Withdraw Button
-                const WithdrawButton(
-                  primaryColor: primaryColor,
-                  textPrimaryColor: Colors.white,
-                ),
-                SizedBox(height: mediumSpacing),
+                      // Earnings Stats Grid
+                      Builder(
+                        builder: (context) {
+                          final double todayEarnings = _helper
+                              .calculateTodayEarnings(deliveryRequests);
+                          final double totalEarnings = _helper
+                              .calculateTotalEarnings(deliveryRequests);
+                          return EarningsStatsGrid(
+                            cardColor: cardColor,
+                            textPrimaryColor: textPrimaryColor,
+                            textSecondaryColor: textSecondaryColor,
+                            todayEarnings: todayEarnings,
+                            totalEarnings: totalEarnings,
+                          );
+                        },
+                      ),
+                      SizedBox(height: mediumSpacing),
 
-                // Earnings Stats Grid
-                EarningsStatsGrid(
-                  cardColor: cardColor,
-                  textPrimaryColor: textPrimaryColor,
-                  textSecondaryColor: textSecondaryColor,
-                ),
-                SizedBox(height: mediumSpacing),
+                      // Escrow and Released Card
+                      Builder(
+                        builder: (context) {
+                          final double amountInEscrow = _helper
+                              .calculateAmountInEscrow(deliveryRequests);
+                          final double amountReleased = _helper
+                              .calculateAmountReleased(deliveryRequests);
+                          return EscrowReleasedCard(
+                            cardColor: cardColor,
+                            textPrimaryColor: textPrimaryColor,
+                            textSecondaryColor: textSecondaryColor,
+                            accentColor: accentColor,
+                            successColor: successColor,
+                            primaryColor: primaryColor,
+                            amountInEscrow: amountInEscrow,
+                            amountReleased: amountReleased,
+                          );
+                        },
+                      ),
+                      SizedBox(height: mediumSpacing),
 
-                // Escrow and Released Card
-                EscrowReleasedCard(
-                  cardColor: cardColor,
-                  textPrimaryColor: textPrimaryColor,
-                  textSecondaryColor: textSecondaryColor,
-                  accentColor: accentColor,
-                  successColor: successColor,
-                  primaryColor: primaryColor,
-                ),
-                SizedBox(height: mediumSpacing),
-
-                // Recent Earnings List
-                Expanded(
-                  child: RecentEarningsList(
-                    cardColor: cardColor,
-                    textPrimaryColor: textPrimaryColor,
-                    textSecondaryColor: textSecondaryColor,
-                    accentColor: accentColor,
-                    successColor: successColor,
-                    dangerColor: dangerColor,
+                      // Recent Earnings List
+                      Expanded(
+                        child: RecentEarningsList(
+                          cardColor: cardColor,
+                          textPrimaryColor: textPrimaryColor,
+                          textSecondaryColor: textSecondaryColor,
+                          accentColor: accentColor,
+                          successColor: successColor,
+                          dangerColor: dangerColor,
+                          deliveryRequests: deliveryRequests,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ],
+          _ => const SizedBox.shrink(),
+        };
+      },
     );
   }
 }
