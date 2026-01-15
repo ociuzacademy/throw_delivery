@@ -1,11 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:throw_delivery/core/exports/bloc_exports.dart';
+import 'package:throw_delivery/core/widgets/loaders/overlay_loader.dart';
+import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
 import 'package:throw_delivery/modules/home_module/widgets/auction_list_widget.dart';
 import 'package:throw_delivery/modules/home_module/widgets/wallet_widget.dart';
 import 'package:throw_delivery/modules/home_module/widgets/delivery_list_widget.dart';
 import 'package:throw_delivery/modules/home_module/widgets/nav_item.dart';
 import 'package:throw_delivery/modules/home_module/widgets/profile_widget.dart';
+import 'package:throw_delivery/modules/login_module/view/login_page.dart';
 
 // Import other tab pages (you'll need to create these)
 
@@ -85,7 +90,34 @@ class _HomePageState extends State<HomePage>
           color: Colors.white,
         ),
       ),
-      body: SafeArea(child: _pages[_currentIndex]),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          switch (state) {
+            case AuthLoading():
+              OverlayLoader.show(context, message: 'Logging out...');
+              break;
+            case AuthError(:final message):
+              OverlayLoader.hide();
+              CustomSnackbar.showError(
+                context: context,
+                message: 'Logout failed: $message',
+              );
+              break;
+            case Unauthenticated():
+              OverlayLoader.hide();
+              CustomSnackbar.showInfo(
+                context: context,
+                message: 'Logged out successfully.',
+              );
+              Navigator.pushReplacement(context, LoginPage.route());
+              break;
+            default:
+              OverlayLoader.hide();
+              break;
+          }
+        },
+        child: SafeArea(child: _pages[_currentIndex]),
+      ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

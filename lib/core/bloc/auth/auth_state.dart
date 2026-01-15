@@ -2,8 +2,8 @@ part of 'auth_bloc.dart';
 
 @freezed
 class AuthState with _$AuthState {
-  const factory AuthState.initial() = Initial;
-  const factory AuthState.loading() = Loading;
+  const factory AuthState.initial() = AuthInitial;
+  const factory AuthState.loading() = AuthLoading;
   const factory AuthState.authenticated({
     required UserProfile user,
     required bool hasVehicleRegistered,
@@ -15,5 +15,5 @@ class AuthState with _$AuthState {
     required String message,
     String? details,
     String? code,
-  }) = AuthErrorState;
+  }) = AuthError;
 }

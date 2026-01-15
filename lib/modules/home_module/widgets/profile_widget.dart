@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:throw_delivery/core/exports/bloc_exports.dart';
 import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
 import 'package:throw_delivery/modules/feedbacks_module/view/feedbacks_page.dart';
@@ -24,6 +25,53 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _profileWidgetHelper.deliveryAgentProfileDetailsInit();
     });
+  }
+
+  void _showLogoutConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Logout',
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to logout?',
+            style: GoogleFonts.poppins(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _profileWidgetHelper.logout();
+              },
+              child: Text(
+                'Logout',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -62,6 +110,23 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       onTap: () {
                         Navigator.push(context, FeedbacksPage.route());
                       },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () => _showLogoutConfirmation(context),
+                      icon: const Icon(Icons.logout),
+                      label: Text(
+                        'Logout',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size.fromHeight(48),
+                      ),
                     ),
                     const SizedBox(height: 24),
                   ],
