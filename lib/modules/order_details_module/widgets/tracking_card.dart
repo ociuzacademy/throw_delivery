@@ -50,42 +50,81 @@ class TrackingCard extends StatelessWidget {
           Column(
             children: [
               // Order Accepted
-              TimelineItem(
-                colorScheme: colorScheme,
-                responsiveSizes: responsiveSizes,
-                icon: Icons.check_circle,
-                iconColor: colorScheme.primaryColor,
-                title: 'Order Accepted',
-                description: 'You have accepted the delivery request.',
-                titleColor: colorScheme.primaryColor,
-                showLine: deliveryStatus == DeliveryStatus.pending,
-                lineColor: colorScheme.primaryColor,
+              Builder(
+                builder: (context) {
+                  final bool isActive =
+                      deliveryStatus == DeliveryStatus.pending ||
+                      deliveryStatus == DeliveryStatus.onTheWay ||
+                      deliveryStatus == DeliveryStatus.dropOff;
+                  return TimelineItem(
+                    colorScheme: colorScheme,
+                    responsiveSizes: responsiveSizes,
+                    icon: Icons.check_circle,
+                    iconColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    title: 'Order Accepted',
+                    description: 'You have accepted the delivery request.',
+                    titleColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    showLine: isActive,
+                    lineColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                  );
+                },
               ),
 
               // Out for Delivery
-              TimelineItem(
-                colorScheme: colorScheme,
-                responsiveSizes: responsiveSizes,
-                icon: Icons.local_shipping,
-                iconColor: colorScheme.successColor,
-                title: 'Out for Delivery',
-                description: 'You are on the way to the dropoff location.',
-                titleColor: colorScheme.successColor,
-                showLine: deliveryStatus == DeliveryStatus.onTheWay,
-                lineColor: colorScheme.successColor,
+              Builder(
+                builder: (context) {
+                  final bool isActive =
+                      deliveryStatus == DeliveryStatus.onTheWay ||
+                      deliveryStatus == DeliveryStatus.dropOff;
+                  return TimelineItem(
+                    colorScheme: colorScheme,
+                    responsiveSizes: responsiveSizes,
+                    icon: Icons.local_shipping,
+                    iconColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    title: 'Out for Delivery',
+                    description: 'You are on the way to the dropoff location.',
+                    titleColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    showLine: isActive,
+                    lineColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                  );
+                },
               ),
 
               // Delivered
-              TimelineItem(
-                colorScheme: colorScheme,
-                responsiveSizes: responsiveSizes,
-                icon: Icons.inventory_2,
-                iconColor: colorScheme.textSecondaryColor,
-                title: 'Delivered',
-                description: 'Waiting for delivery completion.',
-                titleColor: colorScheme.textSecondaryColor,
-                showLine: deliveryStatus == DeliveryStatus.dropOff,
-                lineColor: colorScheme.textSecondaryColor,
+              Builder(
+                builder: (context) {
+                  final bool isActive =
+                      deliveryStatus == DeliveryStatus.dropOff;
+                  return TimelineItem(
+                    colorScheme: colorScheme,
+                    responsiveSizes: responsiveSizes,
+                    icon: Icons.inventory_2,
+                    iconColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    title: 'Delivered',
+                    description: 'Waiting for delivery completion.',
+                    titleColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                    showLine: false,
+                    lineColor: isActive
+                        ? colorScheme.successColor
+                        : colorScheme.secondaryColor,
+                  );
+                },
               ),
             ],
           ),
