@@ -27,12 +27,12 @@ class CustomerContactCard extends StatelessWidget {
       padding: EdgeInsets.all(responsiveSizes.cardPadding),
       decoration: BoxDecoration(
         color: colorScheme.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadowColor,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -41,8 +41,8 @@ class CustomerContactCard extends StatelessWidget {
         children: [
           Text(
             'Customer Contact',
-            style: GoogleFonts.inter(
-              fontSize: responsiveSizes.bodyFontSize,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               color: colorScheme.textPrimaryColor,
             ),
@@ -63,34 +63,61 @@ class CustomerContactCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: responsiveSizes.mediumSpacing),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       customerName,
-                      style: GoogleFonts.inter(
-                        fontSize: responsiveSizes.bodyFontSize,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: colorScheme.textPrimaryColor,
                       ),
                     ),
-                    SizedBox(height: responsiveSizes.smallSpacing),
+                    const SizedBox(height: 2),
                     Text(
                       customerPhone,
-                      style: GoogleFonts.inter(
-                        fontSize: responsiveSizes.smallFontSize,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
                         color: colorScheme.textSecondaryColor,
                       ),
                     ),
                   ],
                 ),
               ),
+              Row(
+                children: [
+                  _buildActionButton(
+                    icon: Icons.call,
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildActionButton(
+                    icon: Icons.chat,
+                    colorScheme: colorScheme,
+                  ),
+                ],
+              ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required OrderDetailsColorScheme colorScheme,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryColor.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: colorScheme.primaryColor, size: 20),
     );
   }
 }

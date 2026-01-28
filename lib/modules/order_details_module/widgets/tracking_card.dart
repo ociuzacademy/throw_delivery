@@ -24,12 +24,12 @@ class TrackingCard extends StatelessWidget {
       padding: EdgeInsets.all(responsiveSizes.cardPadding),
       decoration: BoxDecoration(
         color: colorScheme.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadowColor,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -37,9 +37,9 @@ class TrackingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tracking',
-            style: GoogleFonts.inter(
-              fontSize: responsiveSizes.bodyFontSize,
+            'Tracking Status',
+            style: GoogleFonts.poppins(
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               color: colorScheme.textPrimaryColor,
             ),
@@ -52,26 +52,31 @@ class TrackingCard extends StatelessWidget {
               // Order Accepted
               Builder(
                 builder: (context) {
-                  final bool isActive =
-                      deliveryStatus == DeliveryStatus.pending ||
+                  final bool isPassed =
                       deliveryStatus == DeliveryStatus.onTheWay ||
                       deliveryStatus == DeliveryStatus.dropOff;
+                  final bool isCurrent =
+                      deliveryStatus == DeliveryStatus.pending;
+                  final bool isActive = isPassed || isCurrent;
+
                   return TimelineItem(
                     colorScheme: colorScheme,
                     responsiveSizes: responsiveSizes,
-                    icon: Icons.check_circle,
+                    icon: Icons.check,
                     iconColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        ? colorScheme.primaryColor
+                        : colorScheme.dividerColor,
                     title: 'Order Accepted',
                     description: 'You have accepted the delivery request.',
                     titleColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
-                    showLine: isActive,
-                    lineColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        ? (isCurrent
+                              ? colorScheme.primaryColor
+                              : colorScheme.textPrimaryColor)
+                        : colorScheme.textSecondaryColor,
+                    showLine: true,
+                    lineColor: isPassed
+                        ? colorScheme.primaryColor
+                        : colorScheme.dividerColor,
                   );
                 },
               ),
@@ -79,25 +84,30 @@ class TrackingCard extends StatelessWidget {
               // Out for Delivery
               Builder(
                 builder: (context) {
-                  final bool isActive =
-                      deliveryStatus == DeliveryStatus.onTheWay ||
+                  final bool isPassed =
                       deliveryStatus == DeliveryStatus.dropOff;
+                  final bool isCurrent =
+                      deliveryStatus == DeliveryStatus.onTheWay;
+                  final bool isActive = isPassed || isCurrent;
+
                   return TimelineItem(
                     colorScheme: colorScheme,
                     responsiveSizes: responsiveSizes,
                     icon: Icons.local_shipping,
                     iconColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        ? Colors.green[500]!
+                        : colorScheme.dividerColor,
                     title: 'Out for Delivery',
                     description: 'You are on the way to the dropoff location.',
                     titleColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
-                    showLine: isActive,
-                    lineColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        ? (isCurrent
+                              ? Colors.green[500]!
+                              : colorScheme.textPrimaryColor)
+                        : colorScheme.textSecondaryColor,
+                    showLine: true,
+                    lineColor: isPassed
+                        ? Colors.green[500]!
+                        : colorScheme.dividerColor,
                   );
                 },
               ),
@@ -110,19 +120,17 @@ class TrackingCard extends StatelessWidget {
                   return TimelineItem(
                     colorScheme: colorScheme,
                     responsiveSizes: responsiveSizes,
-                    icon: Icons.inventory_2,
+                    icon: Icons.check,
                     iconColor: isActive
                         ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        : colorScheme.dividerColor,
                     title: 'Delivered',
                     description: 'Waiting for delivery completion.',
                     titleColor: isActive
                         ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                        : colorScheme.textSecondaryColor,
                     showLine: false,
-                    lineColor: isActive
-                        ? colorScheme.successColor
-                        : colorScheme.secondaryColor,
+                    lineColor: colorScheme.dividerColor,
                   );
                 },
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,9 +8,8 @@ import 'package:throw_delivery/core/widgets/custom_error_widget.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/helper/delivery_request_details_color_scheme.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/helper/delivery_request_details_responsive_sizes.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/utils/delivery_request_details_helper.dart';
-import 'package:throw_delivery/modules/delivery_request_details_module/widgets/address_row.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/customer_info.dart';
-import 'package:throw_delivery/modules/delivery_request_details_module/widgets/delivery_request_details_page_divider.dart';
+import 'package:throw_delivery/modules/delivery_request_details_module/widgets/delivery_request_address_section.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/detail_card.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/footer_button.dart';
 import 'package:throw_delivery/modules/delivery_request_details_module/widgets/metric_item.dart';
@@ -71,10 +71,10 @@ class _DeliveryRequestDetailsPageState
             color: Colors.white,
           ),
         ),
+        centerTitle: true,
         backgroundColor: colorScheme.primaryColor,
         foregroundColor: Colors.white,
-        elevation: 4,
-        shadowColor: colorScheme.shadowColor,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.of(context).pop(),
@@ -103,8 +103,6 @@ class _DeliveryRequestDetailsPageState
                         ),
                         child: Column(
                           children: [
-                            SizedBox(height: responsiveSizes.smallSpacing),
-
                             // Customer Info Card
                             DetailCard(
                               colorScheme: colorScheme,
@@ -123,36 +121,59 @@ class _DeliveryRequestDetailsPageState
                             DetailCard(
                               colorScheme: colorScheme,
                               responsiveSizes: responsiveSizes,
-                              child: Column(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  AddressRow(
-                                    colorScheme: colorScheme,
-                                    responsiveSizes: responsiveSizes,
-                                    icon: Icons.my_location,
-                                    iconColor: colorScheme.primaryColor,
-                                    title: 'Pickup Address',
-                                    address:
-                                        deliveryRequestDetails.pickupAddress,
-                                    phone: deliveryRequestDetails
-                                        .pickupPhoneNumber,
+                                  Column(
+                                    children: [
+                                      const SizedBox(height: 4),
+                                      Icon(
+                                        Icons.my_location,
+                                        color: colorScheme.primaryColor,
+                                        size: 20,
+                                      ),
+                                      Container(
+                                        width: 2,
+                                        height: 40,
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                        ),
+                                        color: Colors.grey[100],
+                                      ),
+                                      Icon(
+                                        Icons.location_on,
+                                        color: colorScheme.dangerColor,
+                                        size: 20,
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: responsiveSizes.smallSpacing,
-                                  ),
-                                  const DeliveryRequestDetailsPageDivider(),
-                                  SizedBox(
-                                    height: responsiveSizes.smallSpacing,
-                                  ),
-                                  AddressRow(
-                                    colorScheme: colorScheme,
-                                    responsiveSizes: responsiveSizes,
-                                    icon: Icons.location_on,
-                                    iconColor: colorScheme.dangerColor,
-                                    title: 'Drop-off Address',
-                                    address:
-                                        deliveryRequestDetails.dropOffAddress,
-                                    phone: deliveryRequestDetails
-                                        .dropOffPhoneNumber,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        DeliveryRequestAddressSection(
+                                          title: 'Pickup Address',
+                                          address: deliveryRequestDetails
+                                              .pickupAddress,
+                                          phone: deliveryRequestDetails
+                                              .pickupPhoneNumber,
+                                          colorScheme: colorScheme,
+                                          responsiveSizes: responsiveSizes,
+                                        ),
+                                        const SizedBox(height: 24),
+                                        DeliveryRequestAddressSection(
+                                          title: 'Drop-off Address',
+                                          address: deliveryRequestDetails
+                                              .dropOffAddress,
+                                          phone: deliveryRequestDetails
+                                              .dropOffPhoneNumber,
+                                          colorScheme: colorScheme,
+                                          responsiveSizes: responsiveSizes,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -178,9 +199,9 @@ class _DeliveryRequestDetailsPageState
                                         colorScheme: colorScheme,
                                         responsiveSizes: responsiveSizes,
                                         icon: Icons.social_distance,
-                                        title: 'Est. Distance',
+                                        title: 'Distance',
                                         value:
-                                            '${distance.toStringAsFixed(2)} km',
+                                            '${distance.toStringAsFixed(1)} km',
                                       );
                                     },
                                   ),
@@ -188,7 +209,7 @@ class _DeliveryRequestDetailsPageState
                                     colorScheme: colorScheme,
                                     responsiveSizes: responsiveSizes,
                                     icon: Icons.schedule,
-                                    title: 'Delivery Time',
+                                    title: 'Time',
                                     value: deliveryRequestDetails
                                         .preferredDeliveryTime
                                         .value,
@@ -204,6 +225,79 @@ class _DeliveryRequestDetailsPageState
                                 ],
                               ),
                             ),
+                            SizedBox(height: responsiveSizes.mediumSpacing),
+
+                            // Package Details Card
+                            DetailCard(
+                              colorScheme: colorScheme,
+                              responsiveSizes: responsiveSizes,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'PACKAGE DETAILS',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.textLightColor,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  if (deliveryRequestDetails.itemImageUrl !=
+                                      null)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: CachedNetworkImage(
+                                          imageUrl: deliveryRequestDetails
+                                              .itemImageUrl!,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                                color: Colors.grey[100],
+                                              ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Package Remarks',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: colorScheme.textDarkColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: colorScheme.accentColor.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.grey[200]!,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      deliveryRequestDetails.itemRemarks ??
+                                          'No remarks provided.',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        color: colorScheme.textDarkColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 20),
                           ],
                         ),
                       ),

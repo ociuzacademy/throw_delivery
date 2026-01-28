@@ -37,12 +37,12 @@ class OrderInfoCard extends StatelessWidget {
       padding: EdgeInsets.all(responsiveSizes.cardPadding),
       decoration: BoxDecoration(
         color: colorScheme.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadowColor,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -55,21 +55,21 @@ class OrderInfoCard extends StatelessWidget {
             children: [
               Text(
                 'Order ID: #$orderId',
-                style: GoogleFonts.inter(
-                  fontSize: responsiveSizes.smallFontSize,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
                   color: colorScheme.textSecondaryColor,
                 ),
               ),
               Text(
                 dateFormat.format(pickupDate.toDate()),
-                style: GoogleFonts.inter(
-                  fontSize: responsiveSizes.smallFontSize,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
                   color: colorScheme.textSecondaryColor,
                 ),
               ),
             ],
           ),
-          SizedBox(height: responsiveSizes.mediumSpacing),
+          const SizedBox(height: 16),
 
           // Timeline with addresses
           Row(
@@ -78,6 +78,7 @@ class OrderInfoCard extends StatelessWidget {
               // Timeline dots and line
               Column(
                 children: [
+                  const SizedBox(height: 4),
                   Container(
                     width: 12,
                     height: 12,
@@ -88,9 +89,9 @@ class OrderInfoCard extends StatelessWidget {
                   ),
                   Container(
                     width: 1,
-                    height: 65,
+                    height: 48,
                     color: colorScheme.dividerColor,
-                    margin: const EdgeInsets.symmetric(vertical: 2),
+                    margin: const EdgeInsets.symmetric(vertical: 4),
                   ),
                   Container(
                     width: 12,
@@ -105,7 +106,7 @@ class OrderInfoCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: responsiveSizes.mediumSpacing),
+              const SizedBox(width: 16),
 
               // Addresses
               Expanded(
@@ -118,23 +119,23 @@ class OrderInfoCard extends StatelessWidget {
                       children: [
                         Text(
                           'Pickup: $pickupAddress',
-                          style: GoogleFonts.inter(
-                            fontSize: responsiveSizes.bodyFontSize,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: colorScheme.textPrimaryColor,
                           ),
                         ),
-                        SizedBox(height: responsiveSizes.smallSpacing),
+                        const SizedBox(height: 4),
                         Text(
                           timeFormat.format(pickupDate.toDate()),
-                          style: GoogleFonts.inter(
-                            fontSize: responsiveSizes.smallFontSize,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
                             color: colorScheme.textSecondaryColor,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: responsiveSizes.largeSpacing),
+                    const SizedBox(height: 32),
 
                     // Dropoff Address
                     Column(
@@ -142,17 +143,17 @@ class OrderInfoCard extends StatelessWidget {
                       children: [
                         Text(
                           'Dropoff: $dropoffAddress',
-                          style: GoogleFonts.inter(
-                            fontSize: responsiveSizes.bodyFontSize,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: colorScheme.textPrimaryColor,
                           ),
                         ),
-                        SizedBox(height: responsiveSizes.smallSpacing),
+                        const SizedBox(height: 4),
                         Text(
                           '${timeFormat.format(dropoffDate.toDate())} ${preferedDeliveryTime.value}',
-                          style: GoogleFonts.inter(
-                            fontSize: responsiveSizes.smallFontSize,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
                             color: colorScheme.textSecondaryColor,
                           ),
                         ),

@@ -24,16 +24,24 @@ class MetricItem extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Icon(
-            icon,
-            color: colorScheme.primaryColor,
-            size: responsiveSizes.largeIconSize,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colorScheme.primaryColor.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: colorScheme.primaryColor,
+              size: responsiveSizes.iconSize,
+            ),
           ),
           SizedBox(height: responsiveSizes.microSpacing),
           Text(
-            title,
+            title.toUpperCase(),
             style: GoogleFonts.inter(
-              fontSize: responsiveSizes.smallFontSize,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
               color: colorScheme.textLightColor,
             ),
             textAlign: TextAlign.center,
@@ -42,7 +50,7 @@ class MetricItem extends StatelessWidget {
           Text(
             value,
             style: GoogleFonts.inter(
-              fontSize: responsiveSizes.bodyFontSize,
+              fontSize: responsiveSizes.smallFontSize,
               fontWeight: FontWeight.bold,
               color: colorScheme.textDarkColor,
             ),

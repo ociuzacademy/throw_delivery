@@ -59,17 +59,18 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       appBar: AppBar(
         title: Text(
           'Order Details',
-          style: GoogleFonts.inter(
-            fontSize: responsiveSizes.titleFontSize,
+          style: GoogleFonts.poppins(
+            fontSize: 18,
             fontWeight: FontWeight.w700,
             color: colorScheme.textPrimaryColor,
           ),
         ),
-        backgroundColor: colorScheme.secondaryColor,
+        centerTitle: true,
+        backgroundColor: colorScheme.backgroundColor.withValues(alpha: 0.8),
         foregroundColor: colorScheme.textPrimaryColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -164,6 +165,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                           0.0,
                                       paymentStatus:
                                           deliveryRequest.paymentStatus,
+                                      itemImageUrl:
+                                          deliveryRequest.itemImageUrl,
+                                      itemRemarks: deliveryRequest.itemRemarks,
                                     ),
                                     SizedBox(
                                       height: responsiveSizes.mediumSpacing,
@@ -204,12 +208,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                     DeliveryStatus.onTheWay
                                 ? Container(
                                     width: double.infinity,
-                                    padding: EdgeInsets.all(
-                                      responsiveSizes.horizontalPadding,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 16,
                                     ),
                                     decoration: BoxDecoration(
                                       color: colorScheme.secondaryColor
-                                          .withValues(alpha: 0.8),
+                                          .withValues(alpha: 0.95),
                                       border: Border(
                                         top: BorderSide(
                                           color: colorScheme.dividerColor,
@@ -217,37 +222,41 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                         ),
                                       ),
                                     ),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        _orderDetailsHelper.showOtpBottomSheet(
-                                          colorScheme,
-                                          responsiveSizes,
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            colorScheme.primaryColor,
-                                        foregroundColor: Colors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: responsiveSizes
-                                              .buttonVerticalPadding,
-                                          horizontal: 24,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        elevation: 4,
-                                        shadowColor: colorScheme.primaryColor
-                                            .withValues(alpha: 0.3),
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 400,
                                       ),
-                                      child: Text(
-                                        'Complete Delivery',
-                                        style: GoogleFonts.inter(
-                                          fontSize:
-                                              responsiveSizes.bodyFontSize,
-                                          fontWeight: FontWeight.w700,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          _orderDetailsHelper
+                                              .showOtpBottomSheet(
+                                                colorScheme,
+                                                responsiveSizes,
+                                              );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              colorScheme.primaryColor,
+                                          foregroundColor: Colors.white,
+                                          minimumSize: const Size(
+                                            double.infinity,
+                                            52,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          elevation: 8,
+                                          shadowColor: colorScheme.primaryColor
+                                              .withValues(alpha: 0.3),
+                                        ),
+                                        child: Text(
+                                          'Complete Delivery',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                       ),
                                     ),

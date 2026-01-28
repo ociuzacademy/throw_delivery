@@ -35,10 +35,12 @@ class AddressRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                title.toUpperCase(),
                 style: GoogleFonts.inter(
-                  fontSize: responsiveSizes.smallFontSize,
+                  fontSize: responsiveSizes.smallFontSize - 2,
+                  fontWeight: FontWeight.bold,
                   color: colorScheme.textLightColor,
+                  letterSpacing: 1.2,
                 ),
               ),
               SizedBox(height: responsiveSizes.tinySpacing),
@@ -55,17 +57,14 @@ class AddressRow extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(
-                    Icons.phone,
-                    color: colorScheme.textLightColor,
-                    size: 16,
-                  ),
+                  Icon(Icons.phone, color: colorScheme.primaryColor, size: 14),
                   const SizedBox(width: 4),
                   Text(
                     phone,
                     style: GoogleFonts.inter(
                       fontSize: responsiveSizes.smallFontSize,
-                      color: colorScheme.textLightColor,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.primaryColor,
                     ),
                   ),
                 ],

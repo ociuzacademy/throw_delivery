@@ -25,6 +25,13 @@ class FooterButton extends StatelessWidget {
         border: Border(
           top: BorderSide(color: colorScheme.accentColor, width: 1),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -10),
+          ),
+        ],
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -32,21 +39,28 @@ class FooterButton extends StatelessWidget {
           backgroundColor: colorScheme.primaryColor,
           foregroundColor: Colors.white,
           padding: EdgeInsets.symmetric(
-            vertical: responsiveSizes.buttonVerticalPadding,
+            vertical: responsiveSizes.buttonVerticalPadding + 4,
             horizontal: 24,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
-          elevation: 4,
+          elevation: 8,
           shadowColor: colorScheme.shadowColor,
         ),
-        child: Text(
-          'Place a Bid',
-          style: GoogleFonts.inter(
-            fontSize: responsiveSizes.bodyFontSize,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.payments, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Place a Bid',
+              style: GoogleFonts.inter(
+                fontSize: responsiveSizes.bodyFontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );

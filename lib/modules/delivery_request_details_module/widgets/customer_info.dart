@@ -27,6 +27,10 @@ class CustomerInfo extends StatelessWidget {
           height: responsiveSizes.avatarSize,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(responsiveSizes.avatarSize / 2),
+            border: Border.all(
+              color: colorScheme.primaryColor.withValues(alpha: 0.1),
+              width: 2,
+            ),
             image: DecorationImage(
               image: CachedNetworkImageProvider(avatarUrl),
               fit: BoxFit.cover,
@@ -41,13 +45,44 @@ class CustomerInfo extends StatelessWidget {
               Text(
                 name,
                 style: GoogleFonts.inter(
-                  fontSize: responsiveSizes.bodyFontSize,
+                  fontSize: responsiveSizes.bodyFontSize + 2,
                   fontWeight: FontWeight.bold,
                   color: colorScheme.textDarkColor,
                 ),
               ),
-              SizedBox(height: responsiveSizes.tinySpacing),
+              Row(
+                children: [
+                  Icon(Icons.star, size: 14, color: Colors.yellow[700]),
+                  const SizedBox(width: 4),
+                  Text(
+                    '4.8',
+                    style: GoogleFonts.inter(
+                      fontSize: responsiveSizes.smallFontSize,
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.textDarkColor,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '(120 reviews)',
+                    style: GoogleFonts.inter(
+                      fontSize: responsiveSizes.smallFontSize - 2,
+                      color: colorScheme.textLightColor,
+                    ),
+                  ),
+                ],
+              ),
             ],
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            // Chat functionality
+          },
+          icon: Icon(Icons.chat, color: colorScheme.primaryColor, size: 20),
+          style: IconButton.styleFrom(
+            backgroundColor: colorScheme.primaryColor.withValues(alpha: 0.1),
+            padding: const EdgeInsets.all(8),
           ),
         ),
       ],

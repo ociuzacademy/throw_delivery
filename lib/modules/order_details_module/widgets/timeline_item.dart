@@ -36,25 +36,15 @@ class TimelineItem extends StatelessWidget {
         Column(
           children: [
             Container(
-              width: responsiveSizes.timelineIconSize,
-              height: responsiveSizes.timelineIconSize,
+              width: 24,
+              height: 24,
               decoration: BoxDecoration(
                 color: iconColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: responsiveSizes.iconSize * 0.7,
-              ),
+              child: Icon(icon, color: Colors.white, size: 14),
             ),
-            if (showLine)
-              Container(
-                width: 1,
-                height: 60,
-                color: lineColor,
-                margin: const EdgeInsets.symmetric(vertical: 2),
-              ),
+            if (showLine) Container(width: 2, height: 48, color: lineColor),
           ],
         ),
         SizedBox(width: responsiveSizes.mediumSpacing),
@@ -68,8 +58,8 @@ class TimelineItem extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
-                    fontSize: responsiveSizes.bodyFontSize,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: titleColor,
                   ),
@@ -77,8 +67,8 @@ class TimelineItem extends StatelessWidget {
                 SizedBox(height: responsiveSizes.smallSpacing),
                 Text(
                   description,
-                  style: GoogleFonts.inter(
-                    fontSize: responsiveSizes.smallFontSize,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
                     color: colorScheme.textSecondaryColor,
                   ),
                 ),

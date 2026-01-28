@@ -21,7 +21,7 @@ class DetailCard extends StatelessWidget {
       padding: EdgeInsets.all(responsiveSizes.cardPadding),
       decoration: BoxDecoration(
         color: colorScheme.secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadowColor,
