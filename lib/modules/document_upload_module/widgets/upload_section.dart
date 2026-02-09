@@ -80,13 +80,31 @@ class UploadSection extends StatelessWidget {
                     ),
                     if (pickedImage != null) ...[
                       const SizedBox(height: 4),
-                      Text(
-                        '✓ Image uploaded successfully',
-                        style: GoogleFonts.inter(
-                          fontSize: successFontSize,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            '✓ Image captured successfully',
+                            style: GoogleFonts.inter(
+                              fontSize: successFontSize,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.green,
+                            size: successFontSize,
+                          ),
+                          Text(
+                            ' (with GPS)',
+                            style: GoogleFonts.inter(
+                              fontSize: successFontSize - 1,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ],
@@ -115,10 +133,21 @@ class UploadSection extends StatelessWidget {
                           color: Colors.black.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(borderRadius - 4),
                         ),
-                        child: Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                          size: checkIconSize,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                              size: checkIconSize,
+                            ),
+                            const SizedBox(height: 4),
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.white,
+                              size: checkIconSize * 0.7,
+                            ),
+                          ],
                         ),
                       ),
               ),
@@ -139,10 +168,12 @@ class UploadSection extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.file_upload_outlined, size: iconSize),
+                Icon(Icons.camera_alt_outlined, size: iconSize), // Camera icon
                 const SizedBox(width: 8),
                 Text(
-                  pickedImage != null ? 'Change $subtitle' : 'Upload $subtitle',
+                  pickedImage != null
+                      ? 'Recapture $subtitle'
+                      : 'Capture $subtitle',
                   style: GoogleFonts.inter(
                     fontSize: buttonFontSize,
                     fontWeight: FontWeight.w500,

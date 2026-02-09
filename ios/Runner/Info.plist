@@ -47,5 +47,11 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needed gallery access to upload images.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to capture license images</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need access to your location to embed GPS metadata in captured images</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need access to your location to embed GPS metadata in captured images</string>
 </dict>
 </plist>

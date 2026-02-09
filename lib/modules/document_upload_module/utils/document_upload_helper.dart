@@ -3,9 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:camera_with_gps/services/camera_with_gps.dart';
 import 'package:throw_delivery/core/exports/bloc_exports.dart';
-
 import 'package:throw_delivery/core/widgets/snackbars/custom_snackbar.dart';
 
 class DocumentUploadHelper {
@@ -18,22 +17,20 @@ class DocumentUploadHelper {
 
   Future<void> pickImage(ValueNotifier<File?> imageNotifier) async {
     try {
-      final ImagePicker imagePicker = ImagePicker();
-      final XFile? pickedFile = await imagePicker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 90,
-      );
+      // Check if context is still mounted before proceeding
+      if (!context.mounted) return;
 
-      if (pickedFile != null) {
-        imageNotifier.value = File(pickedFile.path);
+      // Open camera with GPS - using the method from the package
+      final path = await CameraWithGps.openCameraPhotoOnly(context);
+
+      if (path != null) {
+        imageNotifier.value = File(path);
       }
     } catch (e) {
       if (!context.mounted) return;
       CustomSnackbar.showError(
         context: context,
-        message: 'Failed to pick image: $e',
+        message: 'Failed to capture image: $e',
       );
     }
   }
@@ -42,9 +39,8 @@ class DocumentUploadHelper {
     if (frontLicenseImage.value == null) {
       CustomSnackbar.showError(
         context: context,
-        message: 'Please upload image of your license',
+        message: 'Please capture an image of your license',
       );
-
       return;
     }
 
